@@ -133,7 +133,7 @@ export const ManagerInput: React.FC<ManagerInputProps> = ({
               </button>
 
               {showQuickPick && (
-                <div className="absolute top-full left-0 mt-1.5 z-50 w-52 rounded-xl bg-[#1a0821] border border-purple-700/50 shadow-2xl shadow-black/60 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150">
+                <div className="absolute top-full left-0 mt-1.5 z-50 w-52 rounded-xl bg-[#1a0821] border border-purple-700/50 shadow-2xl shadow-black/60 overflow-y-auto overscroll-contain max-h-72 animate-in fade-in slide-in-from-top-1 duration-150">
                   {QUICK_PICKS.map((pick) => (
                     <button
                       key={pick.id}
