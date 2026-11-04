@@ -86,7 +86,7 @@ export const ManagerInput: React.FC<ManagerInputProps> = ({
 
   return (
     <div className="w-full max-w-3xl mx-auto">
-      <div className="relative rounded-2xl glass-panel p-6 sm:p-8 shadow-2xl border border-purple-500/20 overflow-hidden">
+      <div className="relative rounded-2xl glass-panel p-6 sm:p-8 shadow-2xl border border-purple-500/20">
         {/* Subtle decorative gradient background glow */}
         <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-purple-600/15 rounded-full blur-3xl pointer-events-none" />
