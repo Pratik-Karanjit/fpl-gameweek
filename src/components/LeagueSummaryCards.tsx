@@ -39,7 +39,7 @@ export const LeagueSummaryCards: React.FC<LeagueSummaryCardsProps> = ({
   return (
     <div className="grid grid-cols-2 lg:grid-cols-5 gap-3.5 sm:gap-4 mb-6">
       {/* 1. Leader */}
-      <div className="p-4 rounded-2xl bg-[#28002B] border border-[#54245A] flex flex-col justify-between shadow-lg">
+      <div className="p-4 rounded-2xl bg-[#37003C]/90 border border-[#6F2E77] flex flex-col justify-between shadow-lg">
         <div className="flex items-center justify-between text-[#A28DA6] text-xs font-bold uppercase tracking-wider">
           <span>League Leader</span>
           <Crown className="w-4 h-4 text-[#35B9FB]" />
@@ -54,7 +54,7 @@ export const LeagueSummaryCards: React.FC<LeagueSummaryCardsProps> = ({
       </div>
 
       {/* 2. GW Top Performer */}
-      <div className="p-4 rounded-2xl bg-[#28002B] border border-[#54245A] flex flex-col justify-between shadow-lg">
+      <div className="p-4 rounded-2xl bg-[#37003C]/90 border border-[#6F2E77] flex flex-col justify-between shadow-lg">
         <div className="flex items-center justify-between text-[#A28DA6] text-xs font-bold uppercase tracking-wider">
           <span>GW {selectedGw} Top Score</span>
           <Flame className="w-4 h-4 text-[#0BE6FF]" />
@@ -73,7 +73,7 @@ export const LeagueSummaryCards: React.FC<LeagueSummaryCardsProps> = ({
       </div>
 
       {/* 3. League GW Average */}
-      <div className="p-4 rounded-2xl bg-[#28002B] border border-[#54245A] flex flex-col justify-between shadow-lg">
+      <div className="p-4 rounded-2xl bg-[#37003C]/90 border border-[#6F2E77] flex flex-col justify-between shadow-lg">
         <div className="flex items-center justify-between text-[#A28DA6] text-xs font-bold uppercase tracking-wider">
           <span>GW {selectedGw} Average</span>
           <BarChart3 className="w-4 h-4 text-[#6A72F6]" />
@@ -88,7 +88,7 @@ export const LeagueSummaryCards: React.FC<LeagueSummaryCardsProps> = ({
       </div>
 
       {/* 4. Highest Squad Value */}
-      <div className="p-4 rounded-2xl bg-[#28002B] border border-[#54245A] flex flex-col justify-between shadow-lg">
+      <div className="p-4 rounded-2xl bg-[#37003C]/90 border border-[#6F2E77] flex flex-col justify-between shadow-lg">
         <div className="flex items-center justify-between text-[#A28DA6] text-xs font-bold uppercase tracking-wider">
           <span>Richest Squad</span>
           <Coins className="w-4 h-4 text-[#35B9FB]" />
@@ -105,7 +105,7 @@ export const LeagueSummaryCards: React.FC<LeagueSummaryCardsProps> = ({
       </div>
 
       {/* 5. Chips Played */}
-      <div className="col-span-2 lg:col-span-1 p-4 rounded-2xl bg-[#28002B] border border-[#54245A] flex flex-col justify-between shadow-lg">
+      <div className="col-span-2 lg:col-span-1 p-4 rounded-2xl bg-[#37003C]/90 border border-[#6F2E77] flex flex-col justify-between shadow-lg">
         <div className="flex items-center justify-between text-[#A28DA6] text-xs font-bold uppercase tracking-wider">
           <span>Chips Played</span>
           <Zap className="w-4 h-4 text-[#8A49DC]" />

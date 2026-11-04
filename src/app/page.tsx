@@ -271,7 +271,7 @@ export default function Home() {
   ]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#1F0022]">
+    <div className="min-h-screen flex flex-col">
       <Navbar
         currentGameweek={leagueDetails?.current_gameweek ?? 10}
         isDemo={isDemo}
@@ -329,7 +329,7 @@ export default function Home() {
 
             {/* Error loading league */}
             {leagueError && (
-              <div className="mb-6 p-4 rounded-xl bg-[#37003C] border border-rose-500/50 text-rose-200 text-sm flex items-start gap-3">
+              <div className="mb-6 p-4 rounded-xl bg-[#480050] border border-rose-500/50 text-rose-200 text-sm flex items-start gap-3">
                 <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
                 <div>
                   <p className="font-semibold text-rose-300">
@@ -342,7 +342,7 @@ export default function Home() {
 
             {/* League Data Section */}
             {isLoadingLeague ? (
-              <div className="py-20 text-center bg-[#28002B] rounded-2xl border border-[#54245A] shadow-xl">
+              <div className="py-20 text-center bg-[#37003C]/90 rounded-2xl border border-[#6F2E77] shadow-xl">
                 <div className="w-10 h-10 border-4 border-[#0BE6FF] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
                 <h4 className="text-lg font-bold text-white">
                   Aggregating Mini-League Data...
@@ -354,7 +354,7 @@ export default function Home() {
             ) : leagueDetails ? (
               <div>
                 {/* Active League Title Banner */}
-                <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-[#54245A] pb-4">
+                <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-[#6F2E77] pb-4">
                   <div>
                     <span className="text-xs font-bold text-[#0BE6FF] tracking-wider uppercase">
                       Active League Standings
@@ -365,7 +365,7 @@ export default function Home() {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-[#E9E6EB] bg-[#37003C] px-3 py-1.5 rounded-xl border border-[#54245A] font-semibold">
+                    <span className="text-xs text-[#E9E6EB] bg-[#480050] px-3.5 py-1.5 rounded-xl border border-[#6F2E77] font-semibold">
                       Season Gameweek {leagueDetails.current_gameweek} of {leagueDetails.total_gameweeks}
                     </span>
                   </div>
@@ -417,7 +417,7 @@ export default function Home() {
       />
 
       {/* Footer */}
-      <footer className="mt-16 border-t border-[#54245A] bg-[#1F0022] py-8 text-center text-xs text-[#A28DA6]">
+      <footer className="mt-16 border-t border-[#6F2E77] bg-[#220027]/90 py-8 text-center text-xs text-[#A28DA6]">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p>© {new Date().getFullYear()} FPL League Pulse. Built with Next.js & Tailwind CSS.</p>
           <p className="flex items-center gap-1 text-[#A28DA6]">

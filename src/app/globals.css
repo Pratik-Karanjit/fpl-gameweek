@@ -4,10 +4,10 @@
 
 :root {
   --foreground-rgb: 255, 255, 255;
-  --fpl-bg: #1F0022;
-  --fpl-surface: #28002B;
-  --fpl-elevated: #37003C;
-  --fpl-border: #54245A;
+  --fpl-bg: #28002E;
+  --fpl-surface: #37003C;
+  --fpl-elevated: #480050;
+  --fpl-border: #6F2E77;
   --fpl-cyan: #0BE6FF;
   --fpl-sky: #35B9FB;
   --fpl-violet: #8A49DC;
@@ -15,8 +15,9 @@
 
 body {
   color: #FFFFFF;
-  background-color: #1F0022;
-  background-image: radial-gradient(ellipse 80% 50% at 50% -10%, #37003C 0%, #1F0022 80%);
+  background-color: #28002E;
+  background-image: 
+    radial-gradient(circle at 50% -5%, #5F3290 0%, #37003C 45%, #220027 100%);
   background-attachment: fixed;
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -30,11 +31,11 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #1F0022;
+  background: #220027;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #54245A;
+  background: #6F2E77;
   border-radius: 4px;
 }
 
@@ -42,35 +43,35 @@ body {
   background: #0BE6FF;
 }
 
-/* Glassmorphism & Surface utilities using exact FPL design tokens */
+/* Glassmorphism & Surface utilities with brighter Premier League purples */
 .glass-panel {
-  background: rgba(40, 0, 43, 0.85);
+  background: rgba(55, 0, 60, 0.82);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid #54245A;
+  border: 1px solid #6F2E77;
 }
 
 .glass-card {
-  background: rgba(40, 0, 43, 0.75);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid #54245A;
+  background: rgba(55, 0, 60, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid #6F2E77;
 }
 
 .surface-elevated {
-  background: #37003C;
-  border: 1px solid #54245A;
+  background: #480050;
+  border: 1px solid #6F2E77;
 }
 
 /* Glow effects matching Electric Cyan, Sky Blue, and Violet */
 .glow-cyan {
-  box-shadow: 0 0 25px -3px rgba(11, 230, 255, 0.35);
+  box-shadow: 0 0 25px -3px rgba(11, 230, 255, 0.4);
 }
 
 .glow-sky {
-  box-shadow: 0 0 25px -3px rgba(53, 185, 251, 0.35);
+  box-shadow: 0 0 25px -3px rgba(53, 185, 251, 0.4);
 }
 
 .glow-violet {
-  box-shadow: 0 0 30px -3px rgba(138, 73, 220, 0.35);
+  box-shadow: 0 0 30px -3px rgba(138, 73, 220, 0.4);
 }

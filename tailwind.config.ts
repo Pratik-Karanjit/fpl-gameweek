@@ -11,10 +11,11 @@ const config: Config = {
     extend: {
       colors: {
         fpl: {
-          bg: "#1F0022",
-          surface: "#28002B",
-          elevated: "#37003C",
-          border: "#54245A",
+          bg: "#28002E",
+          surface: "#37003C",
+          elevated: "#480050",
+          border: "#6F2E77",
+          borderLight: "#8A49DC",
           cyan: "#0BE6FF",
           sky: "#35B9FB",
           periwinkle: "#6A72F6",

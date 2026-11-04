@@ -30,7 +30,7 @@ export const LeagueSelector: React.FC<LeagueSelectorProps> = ({
 }) => {
   if (!leagues || leagues.length === 0) {
     return (
-      <div className="w-full max-w-7xl mx-auto mb-8 p-8 rounded-2xl glass-panel text-center border border-[#54245A]">
+      <div className="w-full max-w-7xl mx-auto mb-8 p-8 rounded-2xl glass-panel text-center border border-[#6F2E77]">
         <p className="text-[#A28DA6] text-sm">
           No classic mini-leagues found for this manager ID.
         </p>
@@ -50,7 +50,7 @@ export const LeagueSelector: React.FC<LeagueSelectorProps> = ({
             Compare live Gameweek leaderboard ranks across leagues, or click any card for full historical analytics.
           </p>
         </div>
-        <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#37003C] border border-[#54245A] text-[#0BE6FF]">
+        <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#480050] border border-[#6F2E77] text-[#0BE6FF]">
           {leagues.length} {leagues.length === 1 ? "League" : "Leagues"}
         </span>
       </div>
@@ -69,16 +69,16 @@ export const LeagueSelector: React.FC<LeagueSelectorProps> = ({
               key={league.id}
               onClick={() => onSelectLeague(league.id)}
               disabled={isLoadingLeague && isSelected}
-              className={`group text-left p-5 rounded-2xl transition-all duration-200 relative overflow-hidden flex flex-col justify-between ${
+              className={`group text-left p-5 rounded-2xl transition-all duration-200 relative overflow-hidden flex flex-col justify-between shadow-lg ${
                 isSelected
-                  ? "bg-[#37003C] border-2 border-[#0BE6FF] shadow-xl shadow-[#0BE6FF]/20 ring-1 ring-[#0BE6FF]/50"
-                  : "bg-[#28002B] border border-[#54245A] hover:bg-[#37003C]/80 hover:border-[#8A49DC]"
+                  ? "bg-gradient-to-br from-[#480050] to-[#37003C] border-2 border-[#0BE6FF] shadow-xl shadow-[#0BE6FF]/25 ring-2 ring-[#0BE6FF]/40"
+                  : "bg-[#37003C]/90 border border-[#6F2E77] hover:bg-[#480050] hover:border-[#8A49DC]"
               }`}
             >
               {/* Active Badge */}
               {isSelected && (
-                <div className="absolute top-3 right-3 flex items-center gap-1 text-[11px] font-bold text-[#0BE6FF] bg-[#1F0022] px-2.5 py-0.5 rounded-full border border-[#0BE6FF]/50 shadow-sm">
-                  <CheckCircle className="w-3 h-3 text-[#0BE6FF]" />
+                <div className="absolute top-3 right-3 flex items-center gap-1 text-[11px] font-bold text-[#0BE6FF] bg-[#220027] px-2.5 py-0.5 rounded-full border border-[#0BE6FF]/50 shadow-sm">
+                  <CheckCircle className="w-3.5 h-3.5 text-[#0BE6FF]" />
                   <span>Viewing</span>
                 </div>
               )}
@@ -94,7 +94,7 @@ export const LeagueSelector: React.FC<LeagueSelectorProps> = ({
                   </span>
                   {totalManagersCount && (
                     <>
-                      <span className="text-[#54245A]">•</span>
+                      <span className="text-[#6F2E77]">•</span>
                       <span className="text-xs text-[#E9E6EB] font-medium">
                         {new Intl.NumberFormat().format(totalManagersCount)} Managers
                       </span>
@@ -106,7 +106,7 @@ export const LeagueSelector: React.FC<LeagueSelectorProps> = ({
               {/* Two Stat Tiles: GW Leaderboard Rank & Overall Rank */}
               <div className="grid grid-cols-2 gap-2.5 mb-4">
                 {/* 1. GAMEWEEK LEADERBOARD RANK */}
-                <div className="p-3 rounded-xl bg-[#1F0022] border border-[#54245A] relative overflow-hidden">
+                <div className="p-3 rounded-xl bg-[#28002E] border border-[#6F2E77] relative overflow-hidden">
                   <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-[#0BE6FF] mb-1">
                     <span className="flex items-center gap-1">
                       <Zap className="w-3 h-3 text-[#0BE6FF]" />
@@ -119,8 +119,8 @@ export const LeagueSelector: React.FC<LeagueSelectorProps> = ({
 
                   {isLoadingGwRanks && !hasSummary ? (
                     <div className="py-2">
-                      <div className="h-5 w-16 bg-[#37003C] rounded animate-pulse mb-1.5" />
-                      <div className="h-3 w-20 bg-[#37003C]/60 rounded animate-pulse" />
+                      <div className="h-5 w-16 bg-[#480050] rounded animate-pulse mb-1.5" />
+                      <div className="h-3 w-20 bg-[#480050]/60 rounded animate-pulse" />
                     </div>
                   ) : hasSummary ? (
                     <div>
@@ -141,7 +141,7 @@ export const LeagueSelector: React.FC<LeagueSelectorProps> = ({
                           {summary.manager_gw_points} pts
                         </span>
                         {summary.manager_gw_rank === 1 && !summary.is_approximate ? (
-                          <span className="text-[10px] font-bold text-[#35B9FB] bg-[#37003C] px-1.5 py-0.2 rounded border border-[#35B9FB]/40">
+                          <span className="text-[10px] font-bold text-[#35B9FB] bg-[#480050] px-1.5 py-0.2 rounded border border-[#35B9FB]/40">
                             👑 Top Score!
                           </span>
                         ) : (
@@ -159,7 +159,7 @@ export const LeagueSelector: React.FC<LeagueSelectorProps> = ({
                 </div>
 
                 {/* 2. OVERALL SEASON RANK */}
-                <div className="p-3 rounded-xl bg-[#1F0022] border border-[#54245A]">
+                <div className="p-3 rounded-xl bg-[#28002E] border border-[#6F2E77]">
                   <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-[#A28DA6] mb-1">
                     <span className="flex items-center gap-1">
                       <Trophy className="w-3 h-3 text-[#8A49DC]" />
@@ -186,7 +186,7 @@ export const LeagueSelector: React.FC<LeagueSelectorProps> = ({
               </div>
 
               {/* Card Footer Link */}
-              <div className="pt-2 border-t border-[#54245A]/60 flex items-center justify-between text-xs">
+              <div className="pt-2 border-t border-[#6F2E77] flex items-center justify-between text-xs">
                 <span className="text-[#A28DA6] text-[11px]">
                   {hasSummary && summary.league_gw_avg
                     ? `League Avg: ${summary.league_gw_avg} pts`

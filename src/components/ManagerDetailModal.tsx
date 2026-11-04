@@ -36,12 +36,12 @@ export const ManagerDetailModal: React.FC<ManagerDetailModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-4xl max-h-[90vh] flex flex-col rounded-2xl bg-[#28002B] border border-[#54245A] shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-4xl max-h-[90vh] flex flex-col rounded-2xl bg-[#37003C] border border-[#6F2E77] shadow-2xl overflow-hidden">
         {/* Header */}
-        <div className="p-6 border-b border-[#54245A] flex items-start justify-between bg-[#37003C]">
+        <div className="p-6 border-b border-[#6F2E77] flex items-start justify-between bg-[#480050]">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold px-2 py-0.5 rounded-lg bg-[#0BE6FF]/15 text-[#0BE6FF] border border-[#0BE6FF]/30">
+              <span className="text-xs font-bold px-2 py-0.5 rounded-lg bg-[#0BE6FF]/20 text-[#0BE6FF] border border-[#0BE6FF]/40">
                 Mini-League Rank #{manager.original_rank}
               </span>
               <span className="text-xs text-[#A28DA6] font-mono">
@@ -58,15 +58,15 @@ export const ManagerDetailModal: React.FC<ManagerDetailModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl bg-[#28002B] hover:bg-[#1F0022] text-[#A28DA6] hover:text-white transition border border-[#54245A]"
+            className="p-2 rounded-xl bg-[#37003C] hover:bg-[#5F3290] text-[#A28DA6] hover:text-white transition border border-[#6F2E77]"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Manager Snapshot Metrics */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-5 bg-[#1F0022]/60 border-b border-[#54245A]">
-          <div className="p-3 rounded-xl bg-[#37003C] border border-[#54245A]">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-5 bg-[#28002E] border-b border-[#6F2E77]">
+          <div className="p-3 rounded-xl bg-[#480050] border border-[#6F2E77]">
             <span className="text-[10px] font-bold text-[#A28DA6] uppercase tracking-wider block">
               Total Points
             </span>
@@ -75,7 +75,7 @@ export const ManagerDetailModal: React.FC<ManagerDetailModalProps> = ({
             </span>
           </div>
 
-          <div className="p-3 rounded-xl bg-[#37003C] border border-[#54245A]">
+          <div className="p-3 rounded-xl bg-[#480050] border border-[#6F2E77]">
             <span className="text-[10px] font-bold text-[#A28DA6] uppercase tracking-wider block">
               Team Value + Bank
             </span>
@@ -84,7 +84,7 @@ export const ManagerDetailModal: React.FC<ManagerDetailModalProps> = ({
             </span>
           </div>
 
-          <div className="p-3 rounded-xl bg-[#37003C] border border-[#54245A]">
+          <div className="p-3 rounded-xl bg-[#480050] border border-[#6F2E77]">
             <span className="text-[10px] font-bold text-[#A28DA6] uppercase tracking-wider block">
               Transfer Hits Incurred
             </span>
@@ -93,7 +93,7 @@ export const ManagerDetailModal: React.FC<ManagerDetailModalProps> = ({
             </span>
           </div>
 
-          <div className="p-3 rounded-xl bg-[#37003C] border border-[#54245A]">
+          <div className="p-3 rounded-xl bg-[#480050] border border-[#6F2E77]">
             <span className="text-[10px] font-bold text-[#A28DA6] uppercase tracking-wider block">
               Total Bench Points
             </span>
@@ -104,7 +104,7 @@ export const ManagerDetailModal: React.FC<ManagerDetailModalProps> = ({
         </div>
 
         {/* Chips Used Banner */}
-        <div className="p-4 bg-[#28002B] border-b border-[#54245A] flex flex-wrap items-center gap-3">
+        <div className="p-4 bg-[#37003C] border-b border-[#6F2E77] flex flex-wrap items-center gap-3">
           <span className="text-xs font-bold text-[#A28DA6] uppercase tracking-wider">
             Chips Activated:
           </span>
@@ -132,10 +132,10 @@ export const ManagerDetailModal: React.FC<ManagerDetailModalProps> = ({
             Gameweek History
           </h4>
 
-          <div className="rounded-xl border border-[#54245A] overflow-hidden bg-[#1F0022]">
+          <div className="rounded-xl border border-[#6F2E77] overflow-hidden bg-[#28002E]">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-[#37003C] border-b border-[#54245A] text-[10px] font-bold uppercase tracking-wider text-[#A28DA6]">
+                <tr className="bg-[#480050] border-b border-[#6F2E77] text-[10px] font-bold uppercase tracking-wider text-[#A28DA6]">
                   <th className="py-2.5 px-3">GW</th>
                   <th className="py-2.5 px-3">Points</th>
                   <th className="py-2.5 px-3">Hit</th>
@@ -146,13 +146,13 @@ export const ManagerDetailModal: React.FC<ManagerDetailModalProps> = ({
                   <th className="py-2.5 px-3">Bank</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#54245A]/40 font-medium">
+              <tbody className="divide-y divide-[#6F2E77]/40 font-medium">
                 {[...manager.history]
                   .sort((a, b) => b.event - a.event)
                   .map((item) => {
                     const netPoints = item.points - item.event_transfers_cost;
                     return (
-                      <tr key={item.event} className="hover:bg-[#37003C]/50 transition-colors">
+                      <tr key={item.event} className="hover:bg-[#480050]/60 transition-colors">
                         <td className="py-2 px-3 font-bold text-white">GW {item.event}</td>
                         <td className="py-2 px-3 font-black text-[#0BE6FF]">
                           {item.points}

@@ -84,16 +84,16 @@ export const ManagerInput: React.FC<ManagerInputProps> = ({
 
   return (
     <div className="w-full max-w-3xl mx-auto">
-      <div className="relative rounded-2xl glass-panel p-6 sm:p-8 shadow-2xl border border-[#54245A]">
+      <div className="relative rounded-2xl glass-panel p-6 sm:p-8 shadow-2xl border border-[#6F2E77]">
         {/* Subtle decorative gradient background glow using Cyan and Violet */}
-        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-[#0BE6FF]/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-[#8A49DC]/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-[#0BE6FF]/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-[#8A49DC]/25 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#0BE6FF]/15 text-[#0BE6FF] border border-[#0BE6FF]/30">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#0BE6FF]/20 text-[#0BE6FF] border border-[#0BE6FF]/40">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#0BE6FF] animate-ping" />
                   Official Premier League FPL Sync
                 </span>
@@ -109,7 +109,7 @@ export const ManagerInput: React.FC<ManagerInputProps> = ({
             <button
               type="button"
               onClick={handleUseDemo}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#37003C] hover:bg-[#5F3290] border border-[#54245A] text-white transition group self-start sm:self-center shadow-sm"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#480050] hover:bg-[#5F3290] border border-[#6F2E77] text-white transition group self-start sm:self-center shadow-sm"
             >
               <Sparkles className="w-3.5 h-3.5 text-[#0BE6FF] group-hover:rotate-12 transition-transform" />
               <span>Use Sample Manager (#1042318)</span>
@@ -123,7 +123,7 @@ export const ManagerInput: React.FC<ManagerInputProps> = ({
                 type="button"
                 onClick={() => setShowQuickPick((v) => !v)}
                 disabled={isLoading}
-                className="h-full px-4 py-3.5 rounded-xl font-semibold text-sm bg-[#37003C] hover:bg-[#5F3290] border border-[#54245A] text-white flex items-center gap-2 transition whitespace-nowrap disabled:opacity-50"
+                className="h-full px-4 py-3.5 rounded-xl font-semibold text-sm bg-[#480050] hover:bg-[#5F3290] border border-[#6F2E77] text-white flex items-center gap-2 transition whitespace-nowrap disabled:opacity-50"
               >
                 <Sparkles className="w-3.5 h-3.5 text-[#0BE6FF]" />
                 <span>Quick Pick</span>
@@ -131,8 +131,8 @@ export const ManagerInput: React.FC<ManagerInputProps> = ({
               </button>
 
               {showQuickPick && (
-                <div className="absolute top-full left-0 mt-1.5 z-50 w-56 rounded-xl bg-[#28002B] border border-[#54245A] shadow-2xl shadow-black/80 overflow-y-auto overscroll-contain max-h-72 animate-in fade-in slide-in-from-top-1 duration-150">
-                  <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-[#A28DA6] border-b border-[#54245A]/60">
+                <div className="absolute top-full left-0 mt-1.5 z-50 w-56 rounded-xl bg-[#37003C] border border-[#6F2E77] shadow-2xl shadow-black/80 overflow-y-auto overscroll-contain max-h-72 animate-in fade-in slide-in-from-top-1 duration-150">
+                  <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-[#A28DA6] border-b border-[#6F2E77]">
                     Saved Accounts
                   </div>
                   {QUICK_PICKS.map((pick) => (
@@ -140,7 +140,7 @@ export const ManagerInput: React.FC<ManagerInputProps> = ({
                       key={pick.id}
                       type="button"
                       onClick={() => handleQuickPick(pick.id)}
-                      className="w-full text-left px-4 py-2.5 flex items-center justify-between gap-3 hover:bg-[#37003C] text-[#E9E6EB] text-sm transition-colors group"
+                      className="w-full text-left px-4 py-2.5 flex items-center justify-between gap-3 hover:bg-[#480050] text-[#E9E6EB] text-sm transition-colors group"
                     >
                       <span className="font-semibold text-white group-hover:text-[#0BE6FF] transition-colors">
                         {pick.label}
@@ -167,7 +167,7 @@ export const ManagerInput: React.FC<ManagerInputProps> = ({
                   setManagerInput(e.target.value);
                   if (localValidationMessage) setLocalValidationMessage(null);
                 }}
-                className="w-full pl-11 pr-4 py-3.5 bg-[#1F0022] border border-[#54245A] rounded-xl text-white placeholder-[#A28DA6]/60 text-base font-medium focus:outline-none focus:ring-2 focus:ring-[#0BE6FF]/60 focus:border-[#0BE6FF] transition"
+                className="w-full pl-11 pr-4 py-3.5 bg-[#220027] border border-[#6F2E77] rounded-xl text-white placeholder-[#A28DA6]/60 text-base font-medium focus:outline-none focus:ring-2 focus:ring-[#0BE6FF]/60 focus:border-[#0BE6FF] transition"
                 disabled={isLoading}
               />
             </div>
@@ -175,7 +175,7 @@ export const ManagerInput: React.FC<ManagerInputProps> = ({
             <button
               type="submit"
               disabled={isLoading}
-              className="px-6 py-3.5 rounded-xl font-black text-sm bg-gradient-to-r from-[#0BE6FF] via-[#35B9FB] to-[#6A72F6] hover:brightness-110 text-[#1F0022] flex items-center justify-center gap-2 shadow-lg shadow-[#0BE6FF]/25 disabled:opacity-50 transition duration-150 cursor-pointer"
+              className="px-6 py-3.5 rounded-xl font-black text-sm bg-gradient-to-r from-[#0BE6FF] via-[#35B9FB] to-[#6A72F6] hover:brightness-110 text-[#1F0022] flex items-center justify-center gap-2 shadow-lg shadow-[#0BE6FF]/30 disabled:opacity-50 transition duration-150 cursor-pointer"
             >
               {isLoading ? (
                 <>
@@ -193,7 +193,7 @@ export const ManagerInput: React.FC<ManagerInputProps> = ({
 
           {/* Validation Notice */}
           {localValidationMessage && (
-            <div className="mt-4 p-3.5 rounded-xl bg-[#37003C] border border-amber-500/50 text-amber-200 text-sm flex items-start gap-3 animate-in fade-in duration-200">
+            <div className="mt-4 p-3.5 rounded-xl bg-[#480050] border border-amber-500/50 text-amber-200 text-sm flex items-start gap-3 animate-in fade-in duration-200">
               <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
               <div>
                 <p className="font-semibold text-amber-300">Manager ID Required</p>
@@ -204,7 +204,7 @@ export const ManagerInput: React.FC<ManagerInputProps> = ({
 
           {/* Error notice */}
           {error && (
-            <div className="mt-4 p-3.5 rounded-xl bg-[#37003C] border border-rose-500/50 text-rose-200 text-sm flex items-start gap-3">
+            <div className="mt-4 p-3.5 rounded-xl bg-[#480050] border border-rose-500/50 text-rose-200 text-sm flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
               <div>
                 <p className="font-semibold text-rose-300">Could not retrieve data</p>
@@ -225,7 +225,7 @@ export const ManagerInput: React.FC<ManagerInputProps> = ({
             </button>
 
             {showHelp && (
-              <div className="mt-2.5 p-4 rounded-xl bg-[#37003C]/80 border border-[#54245A] text-xs text-[#E9E6EB] leading-relaxed animate-in fade-in slide-in-from-top-1 duration-200">
+              <div className="mt-2.5 p-4 rounded-xl bg-[#480050]/90 border border-[#6F2E77] text-xs text-[#E9E6EB] leading-relaxed animate-in fade-in slide-in-from-top-1 duration-200">
                 <p className="mb-2 font-semibold text-white">
                   Follow these 2 quick steps:
                 </p>
@@ -244,7 +244,7 @@ export const ManagerInput: React.FC<ManagerInputProps> = ({
                   </li>
                   <li>
                     Look at your browser URL bar. It will be:{" "}
-                    <code className="text-[#0BE6FF] bg-[#1F0022] px-1.5 py-0.5 rounded border border-[#54245A]">
+                    <code className="text-[#0BE6FF] bg-[#220027] px-1.5 py-0.5 rounded border border-[#6F2E77]">
                       fantasy.premierleague.com/entry/
                       <span className="text-[#35B9FB] font-bold">XXXXXX</span>
                       /event/...

@@ -33,7 +33,7 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
 }) => {
   if (entries.length === 0) {
     return (
-      <div className="w-full rounded-2xl bg-[#28002B] p-12 text-center border border-[#54245A]">
+      <div className="w-full rounded-2xl bg-[#37003C]/95 p-12 text-center border border-[#6F2E77]">
         <Sparkles className="w-8 h-8 text-[#A28DA6] mx-auto mb-3" />
         <h4 className="text-base font-bold text-white">No managers found</h4>
         <p className="text-xs text-[#A28DA6] mt-1">
@@ -55,11 +55,11 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
   };
 
   return (
-    <div className="w-full rounded-2xl bg-[#28002B] border border-[#54245A] overflow-hidden shadow-2xl">
+    <div className="w-full rounded-2xl bg-[#37003C]/95 border border-[#6F2E77] overflow-hidden shadow-2xl">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-[#54245A] bg-[#37003C] text-[11px] font-bold uppercase tracking-wider text-[#A28DA6]">
+            <tr className="border-b border-[#6F2E77] bg-[#480050] text-[11px] font-bold uppercase tracking-wider text-[#A28DA6]">
               <th className="py-4 pl-5 pr-2 w-16 text-center">
                 <span>Rank</span>
               </th>
@@ -119,7 +119,7 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#54245A]/40 text-sm">
+          <tbody className="divide-y divide-[#6F2E77]/50 text-sm">
             {entries.map((manager, index) => {
               const dynamicRank = index + 1;
               const isCurrentUser = currentManagerId === manager.entry_id;
@@ -130,15 +130,15 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
                   onClick={() => onSelectManager(manager)}
                   className={`cursor-pointer transition-colors duration-150 group ${
                     isCurrentUser
-                      ? "bg-[#37003C] hover:bg-[#5F3290]/40 border-l-4 border-l-[#0BE6FF]"
-                      : "hover:bg-[#37003C]/50"
+                      ? "bg-[#480050] hover:bg-[#5F3290]/50 border-l-4 border-l-[#0BE6FF]"
+                      : "hover:bg-[#480050]/60"
                   }`}
                 >
                   {/* Dynamic Rank Badge */}
                   <td className="py-4 pl-5 pr-2 text-center whitespace-nowrap">
                     <div className="flex flex-col items-center">
                       {dynamicRank === 1 ? (
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#0BE6FF] to-[#35B9FB] text-[#1F0022] font-black text-sm flex items-center justify-center shadow-lg shadow-[#0BE6FF]/30">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#0BE6FF] to-[#35B9FB] text-[#1F0022] font-black text-sm flex items-center justify-center shadow-lg shadow-[#0BE6FF]/35">
                           1
                         </div>
                       ) : dynamicRank === 2 ? (
@@ -166,15 +166,15 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
                             {manager.team_name}
                           </span>
                           {isCurrentUser && (
-                            <span className="text-[10px] uppercase font-bold bg-[#0BE6FF]/15 text-[#0BE6FF] px-1.5 py-0.5 rounded border border-[#0BE6FF]/30">
+                            <span className="text-[10px] uppercase font-bold bg-[#0BE6FF]/20 text-[#0BE6FF] px-2 py-0.5 rounded-md border border-[#0BE6FF]/40">
                               You
                             </span>
                           )}
                         </div>
                         <div className="text-xs text-[#A28DA6] mt-0.5 flex items-center gap-2">
                           <span>{manager.player_name}</span>
-                          <span className="text-[#54245A]">•</span>
-                          <span className="font-mono text-[#A28DA6]/80">
+                          <span className="text-[#6F2E77]">•</span>
+                          <span className="font-mono text-[#A28DA6]">
                             #{manager.entry_id}
                           </span>
                         </div>
@@ -252,7 +252,7 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
                   <td className="py-4 pr-5 pl-2 text-right whitespace-nowrap">
                     <button
                       type="button"
-                      className="p-1.5 rounded-lg bg-[#37003C] hover:bg-[#0BE6FF]/20 text-[#A28DA6] group-hover:text-[#0BE6FF] transition-colors"
+                      className="p-1.5 rounded-lg bg-[#480050] hover:bg-[#0BE6FF]/20 text-[#A28DA6] group-hover:text-[#0BE6FF] transition-colors"
                       title="Drill Down Manager History"
                     >
                       <ChevronRight className="w-4 h-4" />

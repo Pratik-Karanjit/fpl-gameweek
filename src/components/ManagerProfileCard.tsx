@@ -16,11 +16,11 @@ export const ManagerProfileCard: React.FC<ManagerProfileCardProps> = ({
 }) => {
   return (
     <div className="w-full max-w-7xl mx-auto mb-8">
-      <div className="rounded-2xl glass-panel p-5 sm:p-6 border border-[#54245A] shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="rounded-2xl glass-panel p-5 sm:p-6 border border-[#6F2E77] shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         {/* Manager Header Info */}
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#8A49DC] via-[#5F3290] to-[#0BE6FF] p-0.5 shadow-lg shrink-0">
-            <div className="w-full h-full bg-[#28002B] rounded-[14px] flex items-center justify-center">
+            <div className="w-full h-full bg-[#37003C] rounded-[14px] flex items-center justify-center">
               <User className="w-7 h-7 text-[#0BE6FF]" />
             </div>
           </div>
@@ -29,7 +29,7 @@ export const ManagerProfileCard: React.FC<ManagerProfileCardProps> = ({
               <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
                 {profile.name}
               </h2>
-              <span className="text-xs px-2 py-0.5 rounded-lg bg-[#37003C] text-[#0BE6FF] border border-[#54245A] font-mono font-semibold">
+              <span className="text-xs px-2.5 py-0.5 rounded-lg bg-[#480050] text-[#0BE6FF] border border-[#6F2E77] font-mono font-bold">
                 ID #{profile.id}
               </span>
             </div>
@@ -49,7 +49,7 @@ export const ManagerProfileCard: React.FC<ManagerProfileCardProps> = ({
         {/* Quick Stats Pills */}
         <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
           {/* Total Points */}
-          <div className="flex-1 sm:flex-initial min-w-[125px] px-4 py-2.5 rounded-xl bg-[#37003C] border border-[#54245A]">
+          <div className="flex-1 sm:flex-initial min-w-[125px] px-4 py-2.5 rounded-xl bg-[#480050] border border-[#6F2E77] shadow-sm">
             <div className="flex items-center gap-1.5 text-[11px] text-[#A28DA6] font-bold uppercase tracking-wider">
               <Trophy className="w-3.5 h-3.5 text-[#35B9FB]" />
               <span>Total Points</span>
@@ -60,7 +60,7 @@ export const ManagerProfileCard: React.FC<ManagerProfileCardProps> = ({
           </div>
 
           {/* Overall Rank */}
-          <div className="flex-1 sm:flex-initial min-w-[125px] px-4 py-2.5 rounded-xl bg-[#37003C] border border-[#54245A]">
+          <div className="flex-1 sm:flex-initial min-w-[125px] px-4 py-2.5 rounded-xl bg-[#480050] border border-[#6F2E77] shadow-sm">
             <div className="flex items-center gap-1.5 text-[11px] text-[#A28DA6] font-bold uppercase tracking-wider">
               <Award className="w-3.5 h-3.5 text-[#0BE6FF]" />
               <span>Overall Rank</span>
@@ -71,7 +71,7 @@ export const ManagerProfileCard: React.FC<ManagerProfileCardProps> = ({
           </div>
 
           {/* GW Points */}
-          <div className="flex-1 sm:flex-initial min-w-[125px] px-4 py-2.5 rounded-xl bg-[#37003C] border border-[#54245A]">
+          <div className="flex-1 sm:flex-initial min-w-[125px] px-4 py-2.5 rounded-xl bg-[#480050] border border-[#6F2E77] shadow-sm">
             <div className="flex items-center gap-1.5 text-[11px] text-[#A28DA6] font-bold uppercase tracking-wider">
               <Zap className="w-3.5 h-3.5 text-[#8A49DC]" />
               <span>Last GW</span>
@@ -84,7 +84,7 @@ export const ManagerProfileCard: React.FC<ManagerProfileCardProps> = ({
           {/* Reset button */}
           <button
             onClick={onReset}
-            className="p-3 rounded-xl bg-[#37003C] hover:bg-[#5F3290] border border-[#54245A] text-[#A28DA6] hover:text-white transition flex items-center justify-center shrink-0"
+            className="p-3 rounded-xl bg-[#480050] hover:bg-[#5F3290] border border-[#6F2E77] text-[#A28DA6] hover:text-white transition flex items-center justify-center shrink-0"
             title="Switch Manager ID"
           >
             <LogOut className="w-4 h-4" />

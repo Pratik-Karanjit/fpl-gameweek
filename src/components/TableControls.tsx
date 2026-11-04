@@ -46,7 +46,7 @@ export const TableControls: React.FC<TableControlsProps> = ({
   totalOriginalCount,
 }) => {
   return (
-    <div className="w-full rounded-2xl bg-[#28002B] p-5 border border-[#54245A] mb-6 space-y-4 shadow-xl">
+    <div className="w-full rounded-2xl bg-[#37003C]/95 p-5 border border-[#6F2E77] mb-6 space-y-4 shadow-xl">
       {/* Top Bar: Search & Gameweek Selector */}
       <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
         {/* Search input */}
@@ -59,7 +59,7 @@ export const TableControls: React.FC<TableControlsProps> = ({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search by manager name or team name..."
-            className="w-full pl-10 pr-4 py-2.5 bg-[#1F0022] border border-[#54245A] rounded-xl text-sm text-white placeholder-[#A28DA6]/60 focus:outline-none focus:ring-2 focus:ring-[#0BE6FF]/60 focus:border-[#0BE6FF] transition"
+            className="w-full pl-10 pr-4 py-2.5 bg-[#28002E] border border-[#6F2E77] rounded-xl text-sm text-white placeholder-[#A28DA6]/60 focus:outline-none focus:ring-2 focus:ring-[#0BE6FF]/60 focus:border-[#0BE6FF] transition"
           />
         </div>
 
@@ -71,7 +71,7 @@ export const TableControls: React.FC<TableControlsProps> = ({
           <select
             value={selectedGw}
             onChange={(e) => onSelectGw(Number(e.target.value))}
-            className="bg-[#37003C] border border-[#54245A] rounded-xl text-sm font-bold text-[#0BE6FF] px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0BE6FF]/60"
+            className="bg-[#480050] border border-[#6F2E77] rounded-xl text-sm font-bold text-[#0BE6FF] px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0BE6FF]/60"
           >
             {availableGws.map((gw) => (
               <option key={gw} value={gw}>
@@ -89,7 +89,7 @@ export const TableControls: React.FC<TableControlsProps> = ({
           <select
             value={sortField}
             onChange={(e) => onSortChange(e.target.value as SortField)}
-            className="bg-[#37003C] border border-[#54245A] rounded-xl text-sm font-semibold text-white px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#8A49DC]/60"
+            className="bg-[#480050] border border-[#6F2E77] rounded-xl text-sm font-semibold text-white px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#8A49DC]/60"
           >
             <option value="total_points">Total Points</option>
             <option value="selected_gw_points">GW {selectedGw} Points</option>
@@ -103,7 +103,7 @@ export const TableControls: React.FC<TableControlsProps> = ({
       </div>
 
       {/* Bottom Bar: Chip Filters & Results Indicator */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#54245A]/60">
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#6F2E77]">
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs font-bold text-[#A28DA6] flex items-center gap-1.5 mr-1">
             <Filter className="w-3.5 h-3.5 text-[#0BE6FF]" />
@@ -115,7 +115,7 @@ export const TableControls: React.FC<TableControlsProps> = ({
             className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
               activeChipFilter === "all"
                 ? "bg-[#0BE6FF] text-[#1F0022] shadow-sm shadow-[#0BE6FF]/30"
-                : "bg-[#37003C] border border-[#54245A] text-[#A28DA6] hover:text-white"
+                : "bg-[#480050] border border-[#6F2E77] text-[#A28DA6] hover:text-white"
             }`}
           >
             All Managers
@@ -126,7 +126,7 @@ export const TableControls: React.FC<TableControlsProps> = ({
             className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition ${
               activeChipFilter === "wildcard"
                 ? "bg-[#8A49DC]/25 border-[#8A49DC] text-[#8A49DC]"
-                : "border-[#54245A] bg-[#37003C] text-[#A28DA6] hover:text-white"
+                : "border-[#6F2E77] bg-[#480050] text-[#A28DA6] hover:text-white"
             }`}
           >
             Wildcard
@@ -137,7 +137,7 @@ export const TableControls: React.FC<TableControlsProps> = ({
             className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition ${
               activeChipFilter === "freehit"
                 ? "bg-[#35B9FB]/25 border-[#35B9FB] text-[#35B9FB]"
-                : "border-[#54245A] bg-[#37003C] text-[#A28DA6] hover:text-white"
+                : "border-[#6F2E77] bg-[#480050] text-[#A28DA6] hover:text-white"
             }`}
           >
             Free Hit
@@ -148,7 +148,7 @@ export const TableControls: React.FC<TableControlsProps> = ({
             className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition ${
               activeChipFilter === "bboost"
                 ? "bg-[#6A72F6]/25 border-[#6A72F6] text-[#6A72F6]"
-                : "border-[#54245A] bg-[#37003C] text-[#A28DA6] hover:text-white"
+                : "border-[#6F2E77] bg-[#480050] text-[#A28DA6] hover:text-white"
             }`}
           >
             Bench Boost
@@ -159,7 +159,7 @@ export const TableControls: React.FC<TableControlsProps> = ({
             className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition ${
               activeChipFilter === "3xc"
                 ? "bg-[#0BE6FF]/25 border-[#0BE6FF] text-[#0BE6FF]"
-                : "border-[#54245A] bg-[#37003C] text-[#A28DA6] hover:text-white"
+                : "border-[#6F2E77] bg-[#480050] text-[#A28DA6] hover:text-white"
             }`}
           >
             Triple Captain
@@ -170,7 +170,7 @@ export const TableControls: React.FC<TableControlsProps> = ({
             className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition ${
               activeChipFilter === "none"
                 ? "bg-white/20 border-white text-white"
-                : "border-[#54245A] bg-[#37003C] text-[#A28DA6] hover:text-white"
+                : "border-[#6F2E77] bg-[#480050] text-[#A28DA6] hover:text-white"
             }`}
           >
             No Chips Used
