@@ -15,7 +15,7 @@ import {
   AggregatedManagerEntry,
   LeagueGWSummary,
 } from "@/types/fpl";
-import { Trophy, RefreshCw, AlertCircle, Info } from "lucide-react";
+import { Trophy, AlertCircle, Info } from "lucide-react";
 
 export default function Home() {
   const [isDemo, setIsDemo] = useState<boolean>(false);
@@ -42,6 +42,50 @@ export default function Home() {
 
   // Modal inspection state
   const [modalManager, setModalManager] = useState<AggregatedManagerEntry | null>(null);
+
+  // 1b. Fetch Gameweek ranks across all joined mini-leagues
+  const fetchLeaguesGWRanks = useCallback(async (id: number, useDemoData = isDemo, forceRefresh = false) => {
+    setIsLoadingGwRanks(true);
+    try {
+      const url = `/api/fpl/manager/${id}/leagues-gw?${useDemoData ? "mock=true&" : ""}${forceRefresh ? "fresh=true" : ""}`;
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        setLeaguesGwSummaries(data);
+      }
+    } catch (err) {
+      console.warn("Could not load leagues GW summaries:", err);
+    } finally {
+      setIsLoadingGwRanks(false);
+    }
+  }, [isDemo]);
+
+  // 2. Fetch League Standings & Granular Aggregation
+  const fetchLeague = useCallback(async (leagueId: number, useDemoData = isDemo, forceRefresh = false) => {
+    setSelectedLeagueId(leagueId);
+    setIsLoadingLeague(true);
+    setLeagueError(null);
+
+    try {
+      const url = `/api/fpl/league/${leagueId}?${useDemoData ? "mock=true&" : ""}${forceRefresh ? "fresh=true" : ""}`;
+      const res = await fetch(url);
+      const data: LeagueDetailsResponse = await res.json();
+
+      if (!res.ok) {
+        throw new Error((data as unknown as { error?: string }).error || `Failed to fetch league #${leagueId}`);
+      }
+
+      setLeagueDetails(data);
+      if (data.current_gameweek) {
+        setSelectedGw(data.current_gameweek);
+      }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Error aggregating league data";
+      setLeagueError(message);
+    } finally {
+      setIsLoadingLeague(false);
+    }
+  }, [isDemo]);
 
   // 1. Fetch Manager Profile & Leagues
   const fetchManager = useCallback(async (id: number, useDemoData = isDemo) => {
@@ -76,51 +120,7 @@ export default function Home() {
     } finally {
       setIsLoadingProfile(false);
     }
-  }, [isDemo]);
-
-  // 1b. Fetch Gameweek ranks across all joined mini-leagues
-  const fetchLeaguesGWRanks = useCallback(async (id: number, useDemoData = isDemo, forceRefresh = false) => {
-    setIsLoadingGwRanks(true);
-    try {
-      const url = `/api/fpl/manager/${id}/leagues-gw?${useDemoData ? "mock=true&" : ""}${forceRefresh ? "fresh=true" : ""}`;
-      const res = await fetch(url);
-      if (res.ok) {
-        const data = await res.json();
-        setLeaguesGwSummaries(data);
-      }
-    } catch (err) {
-      console.warn("Could not load leagues GW summaries:", err);
-    } finally {
-      setIsLoadingGwRanks(false);
-    }
-  }, [isDemo]);
-
-  // 2. Fetch League Standings & Granular Aggregation
-  const fetchLeague = async (leagueId: number, useDemoData = isDemo, forceRefresh = false) => {
-    setSelectedLeagueId(leagueId);
-    setIsLoadingLeague(true);
-    setLeagueError(null);
-
-    try {
-      const url = `/api/fpl/league/${leagueId}?${useDemoData ? "mock=true&" : ""}${forceRefresh ? "fresh=true" : ""}`;
-      const res = await fetch(url);
-      const data: LeagueDetailsResponse = await res.json();
-
-      if (!res.ok) {
-        throw new Error((data as unknown as { error?: string }).error || `Failed to fetch league #${leagueId}`);
-      }
-
-      setLeagueDetails(data);
-      if (data.current_gameweek) {
-        setSelectedGw(data.current_gameweek);
-      }
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Error aggregating league data";
-      setLeagueError(message);
-    } finally {
-      setIsLoadingLeague(false);
-    }
-  };
+  }, [isDemo, fetchLeague, fetchLeaguesGWRanks]);
 
   // Toggle demo mode
   const handleToggleDemo = (enabled: boolean) => {
@@ -254,7 +254,6 @@ export default function Home() {
       }
 
       if (valA === valB) {
-        // secondary sort by total points
         return b.total_points - a.total_points;
       }
 
@@ -272,7 +271,7 @@ export default function Home() {
   ]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#1F0022]">
       <Navbar
         currentGameweek={leagueDetails?.current_gameweek ?? 10}
         isDemo={isDemo}
@@ -291,14 +290,14 @@ export default function Home() {
         {!managerProfile ? (
           <div className="py-8 sm:py-16">
             <div className="text-center max-w-2xl mx-auto mb-10">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold mb-4 shadow-sm shadow-emerald-500/20">
-                <Trophy className="w-4 h-4" />
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0BE6FF]/15 border border-[#0BE6FF]/40 text-[#0BE6FF] text-xs font-bold mb-4 shadow-sm shadow-[#0BE6FF]/20">
+                <Trophy className="w-4 h-4 text-[#0BE6FF]" />
                 <span>Fantasy Premier League Mini-League Intelligence</span>
               </div>
               <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight leading-tight">
                 Live Dynamic Rankings & Mini-League Analysis
               </h1>
-              <p className="text-slate-400 text-base mt-3 leading-relaxed">
+              <p className="text-[#A28DA6] text-base mt-3 leading-relaxed">
                 Re-rank any mini-league on the fly by Gameweek points, chip usage, squad budgets, or bank balance. Deep drill-downs into rival manager trajectories.
               </p>
             </div>
@@ -330,34 +329,34 @@ export default function Home() {
 
             {/* Error loading league */}
             {leagueError && (
-              <div className="mb-6 p-4 rounded-xl bg-red-950/40 border border-red-500/40 text-red-200 text-sm flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+              <div className="mb-6 p-4 rounded-xl bg-[#37003C] border border-rose-500/50 text-rose-200 text-sm flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-semibold text-red-300">
+                  <p className="font-semibold text-rose-300">
                     Failed to fetch league data
                   </p>
-                  <p className="text-xs text-red-200/80 mt-0.5">{leagueError}</p>
+                  <p className="text-xs text-rose-200/80 mt-0.5">{leagueError}</p>
                 </div>
               </div>
             )}
 
             {/* League Data Section */}
             {isLoadingLeague ? (
-              <div className="py-20 text-center glass-panel rounded-2xl border border-purple-500/20">
-                <div className="w-10 h-10 border-4 border-emerald-400 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+              <div className="py-20 text-center bg-[#28002B] rounded-2xl border border-[#54245A] shadow-xl">
+                <div className="w-10 h-10 border-4 border-[#0BE6FF] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
                 <h4 className="text-lg font-bold text-white">
                   Aggregating Mini-League Data...
                 </h4>
-                <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+                <p className="text-xs text-[#A28DA6] mt-1 max-w-sm mx-auto">
                   Fetching granular gameweek histories, chip usage, and squad valuations for all league entries.
                 </p>
               </div>
             ) : leagueDetails ? (
               <div>
                 {/* Active League Title Banner */}
-                <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-purple-900/40 pb-4">
+                <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-[#54245A] pb-4">
                   <div>
-                    <span className="text-xs font-semibold text-emerald-400 tracking-wider uppercase">
+                    <span className="text-xs font-bold text-[#0BE6FF] tracking-wider uppercase">
                       Active League Standings
                     </span>
                     <h2 className="text-2xl sm:text-3xl font-black text-white">
@@ -366,7 +365,7 @@ export default function Home() {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-400 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">
+                    <span className="text-xs text-[#E9E6EB] bg-[#37003C] px-3 py-1.5 rounded-xl border border-[#54245A] font-semibold">
                       Season Gameweek {leagueDetails.current_gameweek} of {leagueDetails.total_gameweeks}
                     </span>
                   </div>
@@ -418,11 +417,11 @@ export default function Home() {
       />
 
       {/* Footer */}
-      <footer className="mt-16 border-t border-purple-900/40 bg-[#120015]/80 py-8 text-center text-xs text-slate-500">
+      <footer className="mt-16 border-t border-[#54245A] bg-[#1F0022] py-8 text-center text-xs text-[#A28DA6]">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p>© {new Date().getFullYear()} FPL League Pulse. Built with Next.js & Tailwind CSS.</p>
-          <p className="flex items-center gap-1 text-slate-400">
-            <Info className="w-3.5 h-3.5 text-purple-400" />
+          <p className="flex items-center gap-1 text-[#A28DA6]">
+            <Info className="w-3.5 h-3.5 text-[#0BE6FF]" />
             <span>Connects directly to the public Fantasy Premier League API.</span>
           </p>
         </div>
@@ -430,4 +429,3 @@ export default function Home() {
     </div>
   );
 }
-

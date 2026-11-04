@@ -11,16 +11,19 @@ const config: Config = {
     extend: {
       colors: {
         fpl: {
-          purple: "#37003c",
-          darkPurple: "#240027",
-          deepPurple: "#160018",
-          green: "#00ff87",
-          greenHover: "#02df75",
-          cyan: "#04f5ff",
-          magenta: "#e90052",
-          card: "#1e1427",
-          cardBorder: "#342243",
-          surface: "#120a17",
+          bg: "#1F0022",
+          surface: "#28002B",
+          elevated: "#37003C",
+          border: "#54245A",
+          cyan: "#0BE6FF",
+          sky: "#35B9FB",
+          periwinkle: "#6A72F6",
+          violet: "#8A49DC",
+          royal: "#5F3290",
+          mutedBlue: "#406E9E",
+          textPrimary: "#FFFFFF",
+          textSecondary: "#E9E6EB",
+          textMuted: "#A28DA6",
         },
       },
     },
@@ -28,4 +31,3 @@ const config: Config = {
   plugins: [],
 };
 export default config;
-

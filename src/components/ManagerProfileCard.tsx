@@ -16,12 +16,12 @@ export const ManagerProfileCard: React.FC<ManagerProfileCardProps> = ({
 }) => {
   return (
     <div className="w-full max-w-7xl mx-auto mb-8">
-      <div className="rounded-2xl glass-panel p-5 sm:p-6 border border-purple-500/20 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="rounded-2xl glass-panel p-5 sm:p-6 border border-[#54245A] shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         {/* Manager Header Info */}
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-700 via-indigo-600 to-emerald-500 p-0.5 shadow-lg shrink-0">
-            <div className="w-full h-full bg-[#1e1026] rounded-[14px] flex items-center justify-center">
-              <User className="w-7 h-7 text-emerald-400" />
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#8A49DC] via-[#5F3290] to-[#0BE6FF] p-0.5 shadow-lg shrink-0">
+            <div className="w-full h-full bg-[#28002B] rounded-[14px] flex items-center justify-center">
+              <User className="w-7 h-7 text-[#0BE6FF]" />
             </div>
           </div>
           <div>
@@ -29,17 +29,17 @@ export const ManagerProfileCard: React.FC<ManagerProfileCardProps> = ({
               <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
                 {profile.name}
               </h2>
-              <span className="text-xs px-2 py-0.5 rounded bg-purple-900/60 text-purple-200 border border-purple-700/50 font-mono">
+              <span className="text-xs px-2 py-0.5 rounded-lg bg-[#37003C] text-[#0BE6FF] border border-[#54245A] font-mono font-semibold">
                 ID #{profile.id}
               </span>
             </div>
-            <div className="flex flex-wrap items-center gap-3 mt-1 text-xs text-slate-400">
-              <span className="font-medium text-slate-300">
+            <div className="flex flex-wrap items-center gap-3 mt-1 text-xs text-[#A28DA6]">
+              <span className="font-semibold text-white">
                 {profile.player_first_name} {profile.player_last_name}
               </span>
               <span>•</span>
               <span className="flex items-center gap-1">
-                <Globe className="w-3.5 h-3.5 text-slate-400" />
+                <Globe className="w-3.5 h-3.5 text-[#0BE6FF]" />
                 {profile.player_region_name}
               </span>
             </div>
@@ -49,9 +49,9 @@ export const ManagerProfileCard: React.FC<ManagerProfileCardProps> = ({
         {/* Quick Stats Pills */}
         <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
           {/* Total Points */}
-          <div className="flex-1 sm:flex-initial min-w-[120px] px-4 py-2.5 rounded-xl bg-purple-950/40 border border-purple-800/40">
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-semibold uppercase tracking-wider">
-              <Trophy className="w-3.5 h-3.5 text-amber-400" />
+          <div className="flex-1 sm:flex-initial min-w-[125px] px-4 py-2.5 rounded-xl bg-[#37003C] border border-[#54245A]">
+            <div className="flex items-center gap-1.5 text-[11px] text-[#A28DA6] font-bold uppercase tracking-wider">
+              <Trophy className="w-3.5 h-3.5 text-[#35B9FB]" />
               <span>Total Points</span>
             </div>
             <div className="text-xl font-black text-white mt-0.5">
@@ -60,23 +60,23 @@ export const ManagerProfileCard: React.FC<ManagerProfileCardProps> = ({
           </div>
 
           {/* Overall Rank */}
-          <div className="flex-1 sm:flex-initial min-w-[120px] px-4 py-2.5 rounded-xl bg-purple-950/40 border border-purple-800/40">
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-semibold uppercase tracking-wider">
-              <Award className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="flex-1 sm:flex-initial min-w-[125px] px-4 py-2.5 rounded-xl bg-[#37003C] border border-[#54245A]">
+            <div className="flex items-center gap-1.5 text-[11px] text-[#A28DA6] font-bold uppercase tracking-wider">
+              <Award className="w-3.5 h-3.5 text-[#0BE6FF]" />
               <span>Overall Rank</span>
             </div>
-            <div className="text-xl font-black text-white mt-0.5">
+            <div className="text-xl font-black text-[#0BE6FF] mt-0.5">
               #{formatRank(profile.summary_overall_rank)}
             </div>
           </div>
 
           {/* GW Points */}
-          <div className="flex-1 sm:flex-initial min-w-[120px] px-4 py-2.5 rounded-xl bg-purple-950/40 border border-purple-800/40">
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-semibold uppercase tracking-wider">
-              <Zap className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Last GW Points</span>
+          <div className="flex-1 sm:flex-initial min-w-[125px] px-4 py-2.5 rounded-xl bg-[#37003C] border border-[#54245A]">
+            <div className="flex items-center gap-1.5 text-[11px] text-[#A28DA6] font-bold uppercase tracking-wider">
+              <Zap className="w-3.5 h-3.5 text-[#8A49DC]" />
+              <span>Last GW</span>
             </div>
-            <div className="text-xl font-black text-emerald-400 mt-0.5">
+            <div className="text-xl font-black text-[#35B9FB] mt-0.5">
               {profile.summary_event_points ?? "-"} pts
             </div>
           </div>
@@ -84,7 +84,7 @@ export const ManagerProfileCard: React.FC<ManagerProfileCardProps> = ({
           {/* Reset button */}
           <button
             onClick={onReset}
-            className="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-400 hover:text-white transition flex items-center justify-center shrink-0"
+            className="p-3 rounded-xl bg-[#37003C] hover:bg-[#5F3290] border border-[#54245A] text-[#A28DA6] hover:text-white transition flex items-center justify-center shrink-0"
             title="Switch Manager ID"
           >
             <LogOut className="w-4 h-4" />
@@ -94,4 +94,3 @@ export const ManagerProfileCard: React.FC<ManagerProfileCardProps> = ({
     </div>
   );
 };
-
