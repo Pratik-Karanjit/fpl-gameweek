@@ -33,10 +33,10 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
 }) => {
   if (entries.length === 0) {
     return (
-      <div className="w-full rounded-2xl bg-[#37003C]/95 p-12 text-center border border-[#6F2E77]">
-        <Sparkles className="w-8 h-8 text-[#A28DA6] mx-auto mb-3" />
-        <h4 className="text-base font-bold text-white">No managers found</h4>
-        <p className="text-xs text-[#A28DA6] mt-1">
+      <div className="w-full rounded-2xl bg-white p-12 text-center border border-gray-200 shadow-sm">
+        <Sparkles className="w-8 h-8 text-gray-400 mx-auto mb-3" />
+        <h4 className="text-base font-bold text-gray-900">No managers found</h4>
+        <p className="text-xs text-gray-500 mt-1">
           Try adjusting your search query or chip filter.
         </p>
       </div>
@@ -45,21 +45,21 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
 
   const renderSortIcon = (field: SortField) => {
     if (sortField !== field) {
-      return <ArrowUpDown className="w-3.5 h-3.5 text-[#A28DA6] opacity-50 group-hover:opacity-100" />;
+      return <ArrowUpDown className="w-3.5 h-3.5 text-white/50 opacity-60 group-hover:opacity-100" />;
     }
     return sortDirection === "desc" ? (
-      <ArrowDown className="w-3.5 h-3.5 text-[#0BE6FF]" />
+      <ArrowDown className="w-3.5 h-3.5 text-[#00FF87]" />
     ) : (
-      <ArrowUp className="w-3.5 h-3.5 text-[#0BE6FF]" />
+      <ArrowUp className="w-3.5 h-3.5 text-[#00FF87]" />
     );
   };
 
   return (
-    <div className="w-full rounded-2xl bg-[#37003C]/95 border border-[#6F2E77] overflow-hidden shadow-2xl">
+    <div className="w-full rounded-2xl bg-white border border-gray-200 overflow-hidden shadow-sm">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-[#6F2E77] bg-[#480050] text-[11px] font-bold uppercase tracking-wider text-[#A28DA6]">
+            <tr className="border-b border-[#240027] bg-[#37003C] text-[11px] font-bold uppercase tracking-wider text-white">
               <th className="py-4 pl-5 pr-2 w-16 text-center">
                 <span>Rank</span>
               </th>
@@ -68,7 +68,7 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
               </th>
               <th
                 onClick={() => onSortChange("total_points")}
-                className="py-4 px-4 cursor-pointer hover:text-white transition group"
+                className="py-4 px-4 cursor-pointer hover:text-white/80 transition group"
               >
                 <div className="flex items-center gap-1.5">
                   <span>Total Pts</span>
@@ -77,7 +77,7 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
               </th>
               <th
                 onClick={() => onSortChange("selected_gw_points")}
-                className="py-4 px-4 cursor-pointer hover:text-white transition group"
+                className="py-4 px-4 cursor-pointer hover:text-white/80 transition group"
               >
                 <div className="flex items-center gap-1.5">
                   <span>GW {selectedGw} Pts</span>
@@ -86,7 +86,7 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
               </th>
               <th
                 onClick={() => onSortChange("team_value")}
-                className="py-4 px-4 cursor-pointer hover:text-white transition group"
+                className="py-4 px-4 cursor-pointer hover:text-white/80 transition group"
               >
                 <div className="flex items-center gap-1.5">
                   <span>Squad Value</span>
@@ -95,7 +95,7 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
               </th>
               <th
                 onClick={() => onSortChange("bank")}
-                className="py-4 px-4 cursor-pointer hover:text-white transition group hidden md:table-cell"
+                className="py-4 px-4 cursor-pointer hover:text-white/80 transition group hidden md:table-cell"
               >
                 <div className="flex items-center gap-1.5">
                   <span>In Bank</span>
@@ -107,7 +107,7 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
               </th>
               <th
                 onClick={() => onSortChange("bench_points")}
-                className="py-4 px-4 cursor-pointer hover:text-white transition group hidden lg:table-cell"
+                className="py-4 px-4 cursor-pointer hover:text-white/80 transition group hidden lg:table-cell"
               >
                 <div className="flex items-center gap-1.5">
                   <span>Bench Pts</span>
@@ -119,7 +119,7 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#6F2E77]/50 text-sm">
+          <tbody className="divide-y divide-gray-100 text-sm">
             {entries.map((manager, index) => {
               const dynamicRank = index + 1;
               const isCurrentUser = currentManagerId === manager.entry_id;
@@ -130,27 +130,27 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
                   onClick={() => onSelectManager(manager)}
                   className={`cursor-pointer transition-colors duration-150 group ${
                     isCurrentUser
-                      ? "bg-[#480050] hover:bg-[#5F3290]/50 border-l-4 border-l-[#0BE6FF]"
-                      : "hover:bg-[#480050]/60"
+                      ? "bg-[#F6EEF8] hover:bg-[#EFE5F3] border-l-4 border-l-[#37003C]"
+                      : "hover:bg-gray-50/80"
                   }`}
                 >
                   {/* Dynamic Rank Badge */}
                   <td className="py-4 pl-5 pr-2 text-center whitespace-nowrap">
                     <div className="flex flex-col items-center">
                       {dynamicRank === 1 ? (
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#0BE6FF] to-[#35B9FB] text-[#1F0022] font-black text-sm flex items-center justify-center shadow-lg shadow-[#0BE6FF]/35">
+                        <div className="w-8 h-8 rounded-full bg-[#37003C] text-white font-black text-sm flex items-center justify-center shadow-md">
                           1
                         </div>
                       ) : dynamicRank === 2 ? (
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#6A72F6] to-[#35B9FB] text-white font-black text-sm flex items-center justify-center shadow-md">
+                        <div className="w-8 h-8 rounded-full bg-gray-200 text-gray-800 font-black text-sm flex items-center justify-center shadow-sm">
                           2
                         </div>
                       ) : dynamicRank === 3 ? (
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#8A49DC] to-[#5F3290] text-white font-black text-sm flex items-center justify-center shadow-md">
+                        <div className="w-8 h-8 rounded-full bg-amber-600 text-white font-black text-sm flex items-center justify-center shadow-sm">
                           3
                         </div>
                       ) : (
-                        <span className="font-extrabold text-[#E9E6EB] text-sm">
+                        <span className="font-extrabold text-gray-600 text-sm">
                           #{dynamicRank}
                         </span>
                       )}
@@ -162,19 +162,19 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
                     <div className="flex items-center gap-2.5">
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-white group-hover:text-[#0BE6FF] transition-colors">
+                          <span className="font-bold text-gray-900 group-hover:text-[#37003C] transition-colors">
                             {manager.team_name}
                           </span>
                           {isCurrentUser && (
-                            <span className="text-[10px] uppercase font-bold bg-[#0BE6FF]/20 text-[#0BE6FF] px-2 py-0.5 rounded-md border border-[#0BE6FF]/40">
+                            <span className="text-[10px] uppercase font-bold bg-[#37003C] text-white px-2 py-0.5 rounded-md">
                               You
                             </span>
                           )}
                         </div>
-                        <div className="text-xs text-[#A28DA6] mt-0.5 flex items-center gap-2">
+                        <div className="text-xs text-gray-500 mt-0.5 flex items-center gap-2">
                           <span>{manager.player_name}</span>
-                          <span className="text-[#6F2E77]">•</span>
-                          <span className="font-mono text-[#A28DA6]">
+                          <span className="text-gray-300">•</span>
+                          <span className="font-mono text-gray-400">
                             #{manager.entry_id}
                           </span>
                         </div>
@@ -184,10 +184,10 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
 
                   {/* Total Points */}
                   <td className="py-4 px-4 whitespace-nowrap">
-                    <div className="text-base font-extrabold text-white">
+                    <div className="text-base font-extrabold text-gray-900">
                       {manager.total_points}
                     </div>
-                    <div className="text-[11px] text-[#A28DA6] font-medium">
+                    <div className="text-[11px] text-gray-400 font-medium">
                       Orig. #{manager.original_rank}
                     </div>
                   </td>
@@ -195,35 +195,35 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
                   {/* Gameweek Points */}
                   <td className="py-4 px-4 whitespace-nowrap">
                     <div className="flex items-baseline gap-1.5">
-                      <span className="text-base font-black text-[#0BE6FF]">
+                      <span className="text-base font-black text-[#00A859]">
                         {manager.selected_gw_points}
                       </span>
-                      <span className="text-xs text-[#A28DA6]">pts</span>
+                      <span className="text-xs text-gray-500">pts</span>
                     </div>
                     {manager.transfers_cost_gw > 0 && (
-                      <span className="text-[10px] text-rose-400 font-semibold block">
+                      <span className="text-[10px] text-rose-600 font-semibold block">
                         -{manager.transfers_cost_gw} hit ({manager.net_gw_points} net)
                       </span>
                     )}
                   </td>
 
                   {/* Squad Value */}
-                  <td className="py-4 px-4 whitespace-nowrap font-medium text-[#E9E6EB]">
+                  <td className="py-4 px-4 whitespace-nowrap font-medium text-gray-800">
                     <div>{formatMillions(manager.team_value)}</div>
-                    <div className="text-[10px] text-[#A28DA6]">
+                    <div className="text-[10px] text-gray-400">
                       Total: {formatMillions(manager.total_budget)}
                     </div>
                   </td>
 
                   {/* Bank Balance */}
-                  <td className="py-4 px-4 whitespace-nowrap text-[#35B9FB] font-semibold hidden md:table-cell">
+                  <td className="py-4 px-4 whitespace-nowrap text-[#0284C7] font-semibold hidden md:table-cell">
                     {formatMillions(manager.bank)}
                   </td>
 
                   {/* Chips Used */}
                   <td className="py-4 px-4">
                     {manager.chips.length === 0 ? (
-                      <span className="text-xs text-[#A28DA6] italic">None played</span>
+                      <span className="text-xs text-gray-400 italic">None played</span>
                     ) : (
                       <div className="flex flex-wrap gap-1.5">
                         {manager.chips.map((chip, i) => {
@@ -244,7 +244,7 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
                   </td>
 
                   {/* Bench Points */}
-                  <td className="py-4 px-4 whitespace-nowrap text-[#A28DA6] hidden lg:table-cell">
+                  <td className="py-4 px-4 whitespace-nowrap text-gray-600 hidden lg:table-cell">
                     {manager.bench_points} pts
                   </td>
 
@@ -252,7 +252,7 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
                   <td className="py-4 pr-5 pl-2 text-right whitespace-nowrap">
                     <button
                       type="button"
-                      className="p-1.5 rounded-lg bg-[#480050] hover:bg-[#0BE6FF]/20 text-[#A28DA6] group-hover:text-[#0BE6FF] transition-colors"
+                      className="p-1.5 rounded-lg bg-gray-100 hover:bg-[#37003C] text-gray-500 hover:text-white transition-colors"
                       title="Drill Down Manager History"
                     >
                       <ChevronRight className="w-4 h-4" />

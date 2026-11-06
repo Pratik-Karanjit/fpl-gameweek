@@ -271,7 +271,7 @@ export default function Home() {
   ]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#F8F9FA]">
       <Navbar
         currentGameweek={leagueDetails?.current_gameweek ?? 10}
         isDemo={isDemo}
@@ -290,14 +290,14 @@ export default function Home() {
         {!managerProfile ? (
           <div className="py-8 sm:py-16">
             <div className="text-center max-w-2xl mx-auto mb-10">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0BE6FF]/15 border border-[#0BE6FF]/40 text-[#0BE6FF] text-xs font-bold mb-4 shadow-sm shadow-[#0BE6FF]/20">
-                <Trophy className="w-4 h-4 text-[#0BE6FF]" />
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F3E8F5] border border-[#D8C5DF] text-[#37003C] text-xs font-bold mb-4 shadow-sm">
+                <Trophy className="w-4 h-4 text-[#37003C]" />
                 <span>Fantasy Premier League Mini-League Intelligence</span>
               </div>
-              <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+              <h1 className="text-4xl sm:text-5xl font-black text-[#37003C] tracking-tight leading-tight">
                 Live Dynamic Rankings & Mini-League Analysis
               </h1>
-              <p className="text-[#A28DA6] text-base mt-3 leading-relaxed">
+              <p className="text-gray-600 text-base mt-3 leading-relaxed">
                 Re-rank any mini-league on the fly by Gameweek points, chip usage, squad budgets, or bank balance. Deep drill-downs into rival manager trajectories.
               </p>
             </div>
@@ -329,43 +329,43 @@ export default function Home() {
 
             {/* Error loading league */}
             {leagueError && (
-              <div className="mb-6 p-4 rounded-xl bg-[#480050] border border-rose-500/50 text-rose-200 text-sm flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
+              <div className="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 text-sm flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-semibold text-rose-300">
+                  <p className="font-semibold text-rose-800">
                     Failed to fetch league data
                   </p>
-                  <p className="text-xs text-rose-200/80 mt-0.5">{leagueError}</p>
+                  <p className="text-xs text-rose-700 mt-0.5">{leagueError}</p>
                 </div>
               </div>
             )}
 
             {/* League Data Section */}
             {isLoadingLeague ? (
-              <div className="py-20 text-center bg-[#37003C]/90 rounded-2xl border border-[#6F2E77] shadow-xl">
-                <div className="w-10 h-10 border-4 border-[#0BE6FF] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                <h4 className="text-lg font-bold text-white">
+              <div className="py-20 text-center bg-white rounded-2xl border border-gray-200 shadow-sm">
+                <div className="w-10 h-10 border-4 border-[#37003C] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                <h4 className="text-lg font-bold text-gray-900">
                   Aggregating Mini-League Data...
                 </h4>
-                <p className="text-xs text-[#A28DA6] mt-1 max-w-sm mx-auto">
+                <p className="text-xs text-gray-500 mt-1 max-w-sm mx-auto">
                   Fetching granular gameweek histories, chip usage, and squad valuations for all league entries.
                 </p>
               </div>
             ) : leagueDetails ? (
               <div>
                 {/* Active League Title Banner */}
-                <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-[#6F2E77] pb-4">
+                <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-gray-200 pb-4">
                   <div>
-                    <span className="text-xs font-bold text-[#0BE6FF] tracking-wider uppercase">
+                    <span className="text-xs font-bold text-[#37003C] tracking-wider uppercase">
                       Active League Standings
                     </span>
-                    <h2 className="text-2xl sm:text-3xl font-black text-white">
+                    <h2 className="text-2xl sm:text-3xl font-black text-gray-900">
                       {leagueDetails.league.name}
                     </h2>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-[#E9E6EB] bg-[#480050] px-3.5 py-1.5 rounded-xl border border-[#6F2E77] font-semibold">
+                    <span className="text-xs text-gray-700 bg-white px-3.5 py-1.5 rounded-xl border border-gray-200 font-semibold shadow-sm">
                       Season Gameweek {leagueDetails.current_gameweek} of {leagueDetails.total_gameweeks}
                     </span>
                   </div>
@@ -417,11 +417,11 @@ export default function Home() {
       />
 
       {/* Footer */}
-      <footer className="mt-16 border-t border-[#6F2E77] bg-[#220027]/90 py-8 text-center text-xs text-[#A28DA6]">
+      <footer className="mt-16 border-t border-gray-200 bg-white py-8 text-center text-xs text-gray-500">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p>© {new Date().getFullYear()} FPL League Pulse. Built with Next.js & Tailwind CSS.</p>
-          <p className="flex items-center gap-1 text-[#A28DA6]">
-            <Info className="w-3.5 h-3.5 text-[#0BE6FF]" />
+          <p className="flex items-center gap-1 text-gray-500">
+            <Info className="w-3.5 h-3.5 text-[#37003C]" />
             <span>Connects directly to the public Fantasy Premier League API.</span>
           </p>
         </div>

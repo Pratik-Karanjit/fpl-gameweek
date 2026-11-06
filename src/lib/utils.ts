@@ -25,30 +25,30 @@ export const CHIP_CONFIG: Record<
   wildcard: {
     label: "Wildcard",
     short: "WC",
-    color: "text-[#8A49DC]",
-    bg: "bg-[#8A49DC]/15",
-    border: "border-[#8A49DC]/50",
+    color: "text-[#37003C]",
+    bg: "bg-[#F3E8F5]",
+    border: "border-[#D8C5DF]",
   },
   freehit: {
     label: "Free Hit",
     short: "FH",
-    color: "text-[#35B9FB]",
-    bg: "bg-[#35B9FB]/15",
-    border: "border-[#35B9FB]/50",
+    color: "text-amber-800",
+    bg: "bg-amber-50",
+    border: "border-amber-200",
   },
   bboost: {
     label: "Bench Boost",
     short: "BB",
-    color: "text-[#6A72F6]",
-    bg: "bg-[#6A72F6]/15",
-    border: "border-[#6A72F6]/50",
+    color: "text-emerald-800",
+    bg: "bg-emerald-50",
+    border: "border-emerald-200",
   },
   "3xc": {
     label: "Triple Captain",
     short: "3xTC",
-    color: "text-[#0BE6FF]",
-    bg: "bg-[#0BE6FF]/15",
-    border: "border-[#0BE6FF]/50",
+    color: "text-cyan-800",
+    bg: "bg-cyan-50",
+    border: "border-cyan-200",
   },
 };
 
@@ -58,9 +58,9 @@ export function getChipConfig(chipName: string) {
     CHIP_CONFIG[normalized] || {
       label: chipName,
       short: chipName.toUpperCase().slice(0, 3),
-      color: "text-[#E9E6EB]",
-      bg: "bg-[#37003C]",
-      border: "border-[#54245A]",
+      color: "text-gray-700",
+      bg: "bg-gray-100",
+      border: "border-gray-200",
     }
   );
 }
