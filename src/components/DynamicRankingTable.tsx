@@ -10,7 +10,9 @@ import {
   ArrowDown,
   ChevronRight,
   Sparkles,
+  Camera,
 } from "lucide-react";
+import { WinnerCardData } from "./WinnerCardModal";
 
 interface DynamicRankingTableProps {
   entries: AggregatedManagerEntry[];
@@ -20,6 +22,8 @@ interface DynamicRankingTableProps {
   onSortChange: (field: SortField) => void;
   onSelectManager: (entry: AggregatedManagerEntry) => void;
   currentManagerId?: number | null;
+  leagueName?: string;
+  onOpenWinnerModal?: (data: WinnerCardData) => void;
 }
 
 export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
@@ -30,6 +34,8 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
   onSortChange,
   onSelectManager,
   currentManagerId,
+  leagueName = "FPL Mini-League",
+  onOpenWinnerModal,
 }) => {
   if (entries.length === 0) {
     return (
@@ -248,15 +254,42 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
                     {manager.bench_points} pts
                   </td>
 
-                  {/* Action Link */}
+                  {/* Action Link & Create Poster */}
                   <td className="py-4 pr-5 pl-2 text-right whitespace-nowrap">
-                    <button
-                      type="button"
-                      className="p-1.5 rounded-lg bg-gray-100 hover:bg-[#37003C] text-gray-500 hover:text-white transition-colors"
-                      title="Drill Down Manager History"
-                    >
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center justify-end gap-1.5">
+                      {onOpenWinnerModal && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onOpenWinnerModal({
+                              entryId: manager.entry_id,
+                              gw: selectedGw,
+                              playerName: manager.player_name,
+                              teamName: manager.team_name,
+                              points: manager.selected_gw_points,
+                              leagueName,
+                            });
+                          }}
+                          className="p-1.5 rounded-lg bg-gray-100 hover:bg-[#00A859] text-gray-500 hover:text-white transition-colors"
+                          title="Generate GW Winner Card for this Manager"
+                        >
+                          <Camera className="w-4 h-4" />
+                        </button>
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSelectManager(manager);
+                        }}
+                        className="p-1.5 rounded-lg bg-gray-100 hover:bg-[#37003C] text-gray-500 hover:text-white transition-colors"
+                        title="Drill Down Manager History"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               );

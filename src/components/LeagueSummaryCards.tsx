@@ -3,16 +3,21 @@
 import React from "react";
 import { AggregatedManagerEntry } from "@/types/fpl";
 import { formatMillions } from "@/lib/utils";
-import { Crown, Flame, BarChart3, Coins, Zap } from "lucide-react";
+import { Crown, Flame, BarChart3, Coins, Zap, Camera } from "lucide-react";
+import { WinnerCardData } from "./WinnerCardModal";
 
 interface LeagueSummaryCardsProps {
   entries: AggregatedManagerEntry[];
   selectedGw: number;
+  leagueName?: string;
+  onOpenWinnerModal?: (data: WinnerCardData) => void;
 }
 
 export const LeagueSummaryCards: React.FC<LeagueSummaryCardsProps> = ({
   entries,
   selectedGw,
+  leagueName = "FPL Mini-League",
+  onOpenWinnerModal,
 }) => {
   if (!entries || entries.length === 0) return null;
 
@@ -36,6 +41,19 @@ export const LeagueSummaryCards: React.FC<LeagueSummaryCardsProps> = ({
   // 5. Total chips played in league
   const totalChipsUsed = entries.reduce((acc, curr) => acc + curr.chips.length, 0);
 
+  const handleCreatePoster = () => {
+    if (onOpenWinnerModal && highestGwScorer) {
+      onOpenWinnerModal({
+        entryId: highestGwScorer.entry_id,
+        gw: selectedGw,
+        playerName: highestGwScorer.player_name,
+        teamName: highestGwScorer.team_name,
+        points: highestGwScorer.selected_gw_points,
+        leagueName,
+      });
+    }
+  };
+
   return (
     <div className="grid grid-cols-2 lg:grid-cols-5 gap-3.5 sm:gap-4 mb-6">
       {/* 1. Leader */}
@@ -53,21 +71,35 @@ export const LeagueSummaryCards: React.FC<LeagueSummaryCardsProps> = ({
         </div>
       </div>
 
-      {/* 2. GW Top Performer */}
-      <div className="p-4 rounded-2xl bg-white border border-gray-200 flex flex-col justify-between shadow-sm">
+      {/* 2. GW Top Performer (With Poster Creator Action) */}
+      <div className="p-4 rounded-2xl bg-white border-2 border-[#00A859]/30 hover:border-[#00A859] transition-all flex flex-col justify-between shadow-sm relative group">
         <div className="flex items-center justify-between text-gray-500 text-xs font-bold uppercase tracking-wider">
-          <span>GW {selectedGw} Top Score</span>
+          <span className="text-[#00A859]">GW {selectedGw} Top Score</span>
           <Flame className="w-4 h-4 text-[#00A859]" />
         </div>
         <div className="mt-2">
           <p className="text-sm font-bold text-gray-900 truncate">
             {highestGwScorer.team_name}
           </p>
-          <div className="flex items-baseline gap-1 mt-0.5">
-            <span className="text-2xl font-black text-[#00A859]">
-              {highestGwScorer.selected_gw_points}
-            </span>
-            <span className="text-xs text-gray-500 font-medium">pts</span>
+          <div className="flex items-baseline justify-between gap-1 mt-0.5">
+            <div className="flex items-baseline gap-1">
+              <span className="text-2xl font-black text-[#00A859]">
+                {highestGwScorer.selected_gw_points}
+              </span>
+              <span className="text-xs text-gray-500 font-medium">pts</span>
+            </div>
+
+            {onOpenWinnerModal && (
+              <button
+                type="button"
+                onClick={handleCreatePoster}
+                title="Create & Export Winner Poster with Prize Money"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-[#37003C] hover:bg-[#4D0054] text-white shadow-sm transition-transform active:scale-95"
+              >
+                <Camera className="w-3.5 h-3.5 text-[#00FF87]" />
+                <span className="hidden sm:inline">Winner Card</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

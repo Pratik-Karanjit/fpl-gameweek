@@ -9,6 +9,7 @@ import { LeagueSummaryCards } from "@/components/LeagueSummaryCards";
 import { TableControls, SortField, ChipFilter } from "@/components/TableControls";
 import { DynamicRankingTable } from "@/components/DynamicRankingTable";
 import { ManagerDetailModal } from "@/components/ManagerDetailModal";
+import { WinnerCardModal, WinnerCardData } from "@/components/WinnerCardModal";
 import {
   FPLManagerProfile,
   LeagueDetailsResponse,
@@ -40,8 +41,9 @@ export default function Home() {
   const [sortField, setSortField] = useState<SortField>("total_points");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
 
-  // Modal inspection state
+  // Modal inspection states
   const [modalManager, setModalManager] = useState<AggregatedManagerEntry | null>(null);
+  const [winnerCardData, setWinnerCardData] = useState<WinnerCardData | null>(null);
 
   // 1b. Fetch Gameweek ranks across all joined mini-leagues
   const fetchLeaguesGWRanks = useCallback(async (id: number, useDemoData = isDemo, forceRefresh = false) => {
@@ -371,10 +373,12 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Summary Metric Cards */}
+                {/* Summary Metric Cards (Includes GW Winner Poster Trigger) */}
                 <LeagueSummaryCards
                   entries={processedEntries}
                   selectedGw={selectedGw}
+                  leagueName={leagueDetails.league.name}
+                  onOpenWinnerModal={setWinnerCardData}
                 />
 
                 {/* Table Controls (Search, GW select, Chips filter, Sort) */}
@@ -394,7 +398,7 @@ export default function Home() {
                   totalOriginalCount={leagueDetails.aggregated_entries.length}
                 />
 
-                {/* Dynamic Ranking Table (1..N real-time re-ranking) */}
+                {/* Dynamic Ranking Table (1..N real-time re-ranking & Winner Card trigger) */}
                 <DynamicRankingTable
                   entries={processedEntries}
                   selectedGw={selectedGw}
@@ -403,6 +407,8 @@ export default function Home() {
                   onSortChange={handleSortChange}
                   onSelectManager={setModalManager}
                   currentManagerId={managerProfile.id}
+                  leagueName={leagueDetails.league.name}
+                  onOpenWinnerModal={setWinnerCardData}
                 />
               </div>
             ) : null}
@@ -414,6 +420,12 @@ export default function Home() {
       <ManagerDetailModal
         manager={modalManager}
         onClose={() => setModalManager(null)}
+      />
+
+      {/* Gameweek Winner Poster Generator & Export Modal */}
+      <WinnerCardModal
+        data={winnerCardData}
+        onClose={() => setWinnerCardData(null)}
       />
 
       {/* Footer */}
