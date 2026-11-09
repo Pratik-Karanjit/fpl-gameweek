@@ -1,20 +1,16 @@
 "use client";
 
 import React from "react";
-import { Sparkles, Activity, ShieldCheck, RefreshCw } from "lucide-react";
+import { Activity, RefreshCw } from "lucide-react";
 
 interface NavbarProps {
   currentGameweek: number | null;
-  isDemo: boolean;
-  onToggleDemo: (val: boolean) => void;
   onRefresh?: () => void;
   isLoading?: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   currentGameweek,
-  isDemo,
-  onToggleDemo,
   onRefresh,
   isLoading,
 }) => {
@@ -50,7 +46,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center gap-3">
           {/* Active Gameweek Pill */}
           {currentGameweek && (
-            <div className="hidden md:flex items-center gap-1.5 px-3 py-1 bg-[#F3E8F5] border border-[#D8C5DF] rounded-full text-xs font-bold text-[#37003C]">
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-[#F3E8F5] border border-[#D8C5DF] rounded-full text-xs font-bold text-[#37003C]">
               <Activity className="w-3.5 h-3.5 text-[#00BDD6] animate-pulse" />
               <span>GW {currentGameweek} Live</span>
             </div>
@@ -67,28 +63,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-[#37003C]" : ""}`} />
             </button>
           )}
-
-          {/* Demo Data Toggle */}
-          <button
-            onClick={() => onToggleDemo(!isDemo)}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl border text-xs font-semibold transition ${
-              isDemo
-                ? "bg-[#37003C] border-[#37003C] text-white shadow-sm shadow-purple-950/20"
-                : "bg-white border-gray-200 text-gray-600 hover:text-[#37003C] hover:bg-gray-50"
-            }`}
-          >
-            {isDemo ? (
-              <>
-                <Sparkles className="w-3.5 h-3.5 text-[#00BDD6]" />
-                <span>Demo Mode</span>
-              </>
-            ) : (
-              <>
-                <ShieldCheck className="w-3.5 h-3.5 text-gray-400" />
-                <span>Live FPL API</span>
-              </>
-            )}
-          </button>
         </div>
       </div>
     </header>

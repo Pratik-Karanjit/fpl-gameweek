@@ -45,7 +45,7 @@ export async function getBootstrapStatic(): Promise<FPLBootstrap> {
 
   const res = await fetch(`${FPL_BASE}/bootstrap-static/`, {
     headers: COMMON_HEADERS,
-    next: { revalidate: 180 },
+    cache: "no-store",
   });
 
   if (!res.ok) {

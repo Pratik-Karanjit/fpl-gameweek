@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getManagerLeaguesGWSummary } from "@/lib/fpl-api";
-import { MOCK_LEAGUES_GW_SUMMARY } from "@/lib/mock-data";
 
 export async function GET(
   request: NextRequest,
@@ -8,7 +7,6 @@ export async function GET(
 ) {
   const managerId = parseInt(params.id, 10);
   const { searchParams } = new URL(request.url);
-  const useMock = searchParams.get("mock") === "true";
   const fresh = searchParams.get("fresh") === "true";
 
   if (isNaN(managerId) || managerId <= 0) {
@@ -16,11 +14,6 @@ export async function GET(
       { error: "Invalid Manager ID provided." },
       { status: 400 }
     );
-  }
-
-  // Explicit demo/mock mode
-  if (useMock || managerId === 1042318) {
-    return NextResponse.json(MOCK_LEAGUES_GW_SUMMARY);
   }
 
   try {
@@ -31,4 +24,3 @@ export async function GET(
     return NextResponse.json({ error: message }, { status: 502 });
   }
 }
-

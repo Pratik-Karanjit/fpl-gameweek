@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAggregatedLeague } from "@/lib/fpl-api";
-import { MOCK_LEAGUE_DETAILS } from "@/lib/mock-data";
 
 export async function GET(
   request: NextRequest,
@@ -8,7 +7,6 @@ export async function GET(
 ) {
   const leagueId = parseInt(params.id, 10);
   const { searchParams } = new URL(request.url);
-  const useMock = searchParams.get("mock") === "true";
   const fresh = searchParams.get("fresh") === "true";
 
   if (isNaN(leagueId) || leagueId <= 0) {
@@ -16,11 +14,6 @@ export async function GET(
       { error: "Invalid League ID provided. Must be a valid numeric ID." },
       { status: 400 }
     );
-  }
-
-  // Explicit demo/mock mode or fallback
-  if (useMock || leagueId === 284910) {
-    return NextResponse.json(MOCK_LEAGUE_DETAILS);
   }
 
   try {
@@ -32,4 +25,3 @@ export async function GET(
     return NextResponse.json({ error: message }, { status });
   }
 }
-

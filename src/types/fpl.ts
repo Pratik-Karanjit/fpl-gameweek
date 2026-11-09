@@ -8,9 +8,26 @@ export interface FPLGameweek {
   finished: boolean;
 }
 
+export interface FPLBootstrapElement {
+  id: number;
+  web_name: string;
+  team: number;
+  team_code: number;
+  element_type: number;
+}
+
+export interface FPLBootstrapTeam {
+  id: number;
+  code: number;
+  name: string;
+  short_name: string;
+}
+
 export interface FPLBootstrap {
   events: FPLGameweek[];
   total_players: number;
+  elements?: FPLBootstrapElement[];
+  teams?: FPLBootstrapTeam[];
 }
 
 export interface FPLClassicLeagueItem {

@@ -69,12 +69,6 @@ export const ManagerInput: React.FC<ManagerInputProps> = ({
     onSearch(parsed);
   };
 
-  const handleUseDemo = () => {
-    setManagerInput("1042318");
-    setLocalValidationMessage(null);
-    onSearch(1042318);
-  };
-
   const handleQuickPick = (id: number) => {
     setManagerInput(String(id));
     setLocalValidationMessage(null);
@@ -105,15 +99,6 @@ export const ManagerInput: React.FC<ManagerInputProps> = ({
                 Pull all joined mini-leagues, aggregate manager histories, and dynamically re-rank.
               </p>
             </div>
-
-            <button
-              type="button"
-              onClick={handleUseDemo}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#F8F4FA] hover:bg-[#EFE5F3] border border-[#D8C5DF] text-[#37003C] transition group self-start sm:self-center shadow-sm"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-[#37003C] group-hover:rotate-12 transition-transform" />
-              <span>Use Sample Manager (#1042318)</span>
-            </button>
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">

@@ -10,7 +10,6 @@ import {
   Coins,
   CheckCircle,
   AlertCircle,
-  Camera,
 } from "lucide-react";
 
 export interface WinnerCardData {
@@ -28,19 +27,27 @@ interface WinnerCardModalProps {
   onClose: () => void;
 }
 
+function buildCardUrl(data: WinnerCardData, prizeMoney: string): string {
+  const params = new URLSearchParams({
+    entryId: String(data.entryId),
+    gw: String(data.gw),
+    playerName: data.playerName,
+    teamName: data.teamName,
+    points: String(data.points),
+    leagueName: data.leagueName,
+    prizeMoney: prizeMoney.trim() || "Winner",
+  });
+  return `/api/fpl/winner-card?${params.toString()}`;
+}
+
 export const WinnerCardModal: React.FC<WinnerCardModalProps> = ({
   data,
   onClose,
 }) => {
   const [prizeMoney, setPrizeMoney] = useState<string>("Rs. 2,000");
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
-  const [statusMessage, setStatusMessage] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
-  const [generatedResult, setGeneratedResult] = useState<{
-    imageUrl: string;
-    filename: string;
-    fileSizeKb: number;
-  } | null>(null);
+  const [generatedUrl, setGeneratedUrl] = useState<string | null>(null);
 
   // Close on ESC
   useEffect(() => {
@@ -54,10 +61,9 @@ export const WinnerCardModal: React.FC<WinnerCardModalProps> = ({
   // Reset state when data changes
   useEffect(() => {
     if (data) {
-      setGeneratedResult(null);
+      setGeneratedUrl(null);
       setError(null);
       setIsGenerating(false);
-      setStatusMessage("");
       if (data.prizeMoney) setPrizeMoney(data.prizeMoney);
     }
   }, [data]);
@@ -67,51 +73,52 @@ export const WinnerCardModal: React.FC<WinnerCardModalProps> = ({
   const handleGenerate = async () => {
     setIsGenerating(true);
     setError(null);
-    setStatusMessage("Opening headless browser to capture live FPL pitch...");
 
     try {
-      setTimeout(() => {
-        setStatusMessage("Screenshotting team formation and players...");
-      }, 3000);
+      const url = buildCardUrl(data, prizeMoney);
 
-      setTimeout(() => {
-        setStatusMessage("Compositing poster and optimizing to lightweight WebP...");
-      }, 7000);
-
-      const res = await fetch("/api/fpl/winner-card", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          entryId: data.entryId,
-          gw: data.gw,
-          playerName: data.playerName,
-          teamName: data.teamName,
-          points: data.points,
-          leagueName: data.leagueName,
-          prizeMoney: prizeMoney.trim() || "Winner",
-        }),
-      });
-
-      const result = await res.json();
+      // Validate the image loads successfully
+      const res = await fetch(url);
       if (!res.ok) {
-        throw new Error(result.error || "Failed to generate winner card");
+        throw new Error(`Failed to generate card (status ${res.status})`);
       }
 
-      setGeneratedResult({
-        imageUrl: result.imageUrl,
-        filename: result.filename,
-        fileSizeKb: result.fileSizeKb,
-      });
+      setGeneratedUrl(url);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Error creating screenshot";
+      const msg =
+        err instanceof Error ? err.message : "Error generating winner card";
       setError(msg);
     } finally {
       setIsGenerating(false);
-      setStatusMessage("");
     }
   };
 
-  const PRESET_PRIZES = ["Rs. 1,000", "Rs. 2,000", "Rs. 5,000", "£50", "£100", "$50"];
+  const handleDownload = async () => {
+    if (!generatedUrl) return;
+    try {
+      const res = await fetch(generatedUrl);
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = `winner-gw${data.gw}-${data.entryId}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
+    } catch {
+      setError("Failed to download the image.");
+    }
+  };
+
+  const PRESET_PRIZES = [
+    "Rs. 1,000",
+    "Rs. 2,000",
+    "Rs. 5,000",
+    "£50",
+    "£100",
+    "$50",
+  ];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
@@ -232,61 +239,51 @@ export const WinnerCardModal: React.FC<WinnerCardModalProps> = ({
             <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 text-xs flex items-start gap-2.5">
               <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
               <div>
-                <p className="font-bold text-rose-800">Screenshot Failed</p>
+                <p className="font-bold text-rose-800">Generation Failed</p>
                 <p className="mt-0.5">{error}</p>
               </div>
             </div>
           )}
 
           {/* Generated Result Preview */}
-          {generatedResult && (
+          {generatedUrl && (
             <div className="p-4 rounded-xl bg-white border border-gray-200 shadow-sm space-y-3 animate-in fade-in duration-300">
-              <div className="flex items-center justify-between text-xs">
+              <div className="flex items-center text-xs">
                 <span className="font-bold text-emerald-700 flex items-center gap-1.5">
                   <CheckCircle className="w-4 h-4 text-emerald-600" />
-                  <span>Poster Generated & Saved to public folder!</span>
-                </span>
-                <span className="text-gray-500 font-medium">
-                  {generatedResult.fileSizeKb} KB (Optimized WebP)
+                  <span>Winner Card Generated!</span>
                 </span>
               </div>
 
               {/* Image Preview Box */}
-              <div className="rounded-xl overflow-hidden border border-gray-200 bg-gray-950 flex items-center justify-center max-h-80 relative group">
+              <div className="rounded-xl overflow-hidden border border-gray-300 bg-[#18001d] flex items-center justify-center max-h-[520px] overflow-y-auto relative shadow-inner">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={generatedResult.imageUrl}
+                  src={generatedUrl}
                   alt="Generated Winner Poster"
-                  className="w-full h-auto object-contain max-h-80 shadow-md"
+                  className="w-full h-auto object-contain max-h-[520px] shadow-lg"
                 />
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-gray-100">
-                <span className="text-[11px] text-gray-500 font-mono truncate max-w-[260px]">
-                  {generatedResult.filename}
-                </span>
+              <div className="flex flex-wrap items-center justify-end gap-3 pt-2 border-t border-gray-100">
+                <a
+                  href={generatedUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-gray-100 hover:bg-gray-200 text-gray-700 transition"
+                >
+                  <span>View Full Size</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
 
-                <div className="flex items-center gap-2">
-                  <a
-                    href={generatedResult.imageUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-gray-100 hover:bg-gray-200 text-gray-700 transition"
-                  >
-                    <span>View Full Size</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-
-                  <a
-                    href={generatedResult.imageUrl}
-                    download={generatedResult.filename}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-[#00A859] hover:bg-[#008f4c] text-white transition shadow-sm"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    <span>Download Poster</span>
-                  </a>
-                </div>
+                <button
+                  onClick={handleDownload}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-[#00A859] hover:bg-[#008f4c] text-white transition shadow-sm"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Download Poster</span>
+                </button>
               </div>
             </div>
           )}
@@ -311,13 +308,13 @@ export const WinnerCardModal: React.FC<WinnerCardModalProps> = ({
             {isGenerating ? (
               <>
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span>{statusMessage || "Generating Card..."}</span>
+                <span>Capturing real FPL pitch screenshot...</span>
               </>
             ) : (
               <>
-                <Camera className="w-4 h-4 text-[#00FF87]" />
+                <Sparkles className="w-4 h-4 text-[#00FF87]" />
                 <span>
-                  {generatedResult ? "Re-generate Poster" : "Capture & Generate Poster"}
+                  {generatedUrl ? "Re-generate Poster" : "Generate Poster"}
                 </span>
               </>
             )}
@@ -327,4 +324,3 @@ export const WinnerCardModal: React.FC<WinnerCardModalProps> = ({
     </div>
   );
 };
-

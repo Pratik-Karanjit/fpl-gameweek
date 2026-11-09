@@ -19,7 +19,6 @@ import {
 import { Trophy, AlertCircle, Info } from "lucide-react";
 
 export default function Home() {
-  const [isDemo, setIsDemo] = useState<boolean>(false);
   const [managerId, setManagerId] = useState<number | null>(null);
   const [managerProfile, setManagerProfile] = useState<FPLManagerProfile | null>(null);
   const [selectedLeagueId, setSelectedLeagueId] = useState<number | null>(null);
@@ -46,10 +45,10 @@ export default function Home() {
   const [winnerCardData, setWinnerCardData] = useState<WinnerCardData | null>(null);
 
   // 1b. Fetch Gameweek ranks across all joined mini-leagues
-  const fetchLeaguesGWRanks = useCallback(async (id: number, useDemoData = isDemo, forceRefresh = false) => {
+  const fetchLeaguesGWRanks = useCallback(async (id: number, forceRefresh = false) => {
     setIsLoadingGwRanks(true);
     try {
-      const url = `/api/fpl/manager/${id}/leagues-gw?${useDemoData ? "mock=true&" : ""}${forceRefresh ? "fresh=true" : ""}`;
+      const url = `/api/fpl/manager/${id}/leagues-gw?${forceRefresh ? "fresh=true" : ""}`;
       const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
@@ -60,16 +59,16 @@ export default function Home() {
     } finally {
       setIsLoadingGwRanks(false);
     }
-  }, [isDemo]);
+  }, []);
 
   // 2. Fetch League Standings & Granular Aggregation
-  const fetchLeague = useCallback(async (leagueId: number, useDemoData = isDemo, forceRefresh = false) => {
+  const fetchLeague = useCallback(async (leagueId: number, forceRefresh = false) => {
     setSelectedLeagueId(leagueId);
     setIsLoadingLeague(true);
     setLeagueError(null);
 
     try {
-      const url = `/api/fpl/league/${leagueId}?${useDemoData ? "mock=true&" : ""}${forceRefresh ? "fresh=true" : ""}`;
+      const url = `/api/fpl/league/${leagueId}?${forceRefresh ? "fresh=true" : ""}`;
       const res = await fetch(url);
       const data: LeagueDetailsResponse = await res.json();
 
@@ -87,17 +86,17 @@ export default function Home() {
     } finally {
       setIsLoadingLeague(false);
     }
-  }, [isDemo]);
+  }, []);
 
   // 1. Fetch Manager Profile & Leagues
-  const fetchManager = useCallback(async (id: number, useDemoData = isDemo) => {
+  const fetchManager = useCallback(async (id: number) => {
     setIsLoadingProfile(true);
     setProfileError(null);
     setSelectedLeagueId(null);
     setLeagueDetails(null);
 
     try {
-      const url = `/api/fpl/manager/${id}${useDemoData ? "?mock=true" : ""}`;
+      const url = `/api/fpl/manager/${id}`;
       const res = await fetch(url);
       const data = await res.json();
 
@@ -109,12 +108,12 @@ export default function Home() {
       setManagerProfile(data);
 
       // Kick off Gameweek leaderboard rank calculation for all joined leagues
-      fetchLeaguesGWRanks(id, useDemoData);
+      fetchLeaguesGWRanks(id);
 
       // Auto-select first classic league if present
       if (data.leagues?.classic && data.leagues.classic.length > 0) {
         const firstLeague = data.leagues.classic[0];
-        fetchLeague(firstLeague.id, useDemoData);
+        fetchLeague(firstLeague.id);
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Error connecting to FPL API";
@@ -122,17 +121,7 @@ export default function Home() {
     } finally {
       setIsLoadingProfile(false);
     }
-  }, [isDemo, fetchLeague, fetchLeaguesGWRanks]);
-
-  // Toggle demo mode
-  const handleToggleDemo = (enabled: boolean) => {
-    setIsDemo(enabled);
-    if (enabled) {
-      fetchManager(1042318, true);
-    } else if (managerId) {
-      fetchManager(managerId, false);
-    }
-  };
+  }, [fetchLeague, fetchLeaguesGWRanks]);
 
   const handleResetManager = () => {
     setManagerId(null);
@@ -276,12 +265,10 @@ export default function Home() {
     <div className="min-h-screen flex flex-col bg-[#F8F9FA]">
       <Navbar
         currentGameweek={leagueDetails?.current_gameweek ?? 10}
-        isDemo={isDemo}
-        onToggleDemo={handleToggleDemo}
         onRefresh={() => {
-          if (selectedLeagueId) fetchLeague(selectedLeagueId, isDemo, true);
+          if (selectedLeagueId) fetchLeague(selectedLeagueId, true);
           if (managerId) {
-            fetchLeaguesGWRanks(managerId, isDemo, true);
+            fetchLeaguesGWRanks(managerId, true);
           }
         }}
         isLoading={isLoadingProfile || isLoadingLeague || isLoadingGwRanks}
