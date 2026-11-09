@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Navbar } from "@/components/Navbar";
 import { ManagerInput } from "@/components/ManagerInput";
 import { ManagerProfileCard } from "@/components/ManagerProfileCard";
@@ -44,6 +44,9 @@ export default function Home() {
   const [modalManager, setModalManager] = useState<AggregatedManagerEntry | null>(null);
   const [winnerCardData, setWinnerCardData] = useState<WinnerCardData | null>(null);
 
+  // Ref to scroll to league data section when Analyze is clicked
+  const leagueSectionRef = useRef<HTMLDivElement | null>(null);
+
   // 1b. Fetch Gameweek ranks across all joined mini-leagues
   const fetchLeaguesGWRanks = useCallback(async (id: number, forceRefresh = false) => {
     setIsLoadingGwRanks(true);
@@ -62,10 +65,16 @@ export default function Home() {
   }, []);
 
   // 2. Fetch League Standings & Granular Aggregation
-  const fetchLeague = useCallback(async (leagueId: number, forceRefresh = false) => {
+  const fetchLeague = useCallback(async (leagueId: number, forceRefresh = false, shouldScroll = false) => {
     setSelectedLeagueId(leagueId);
     setIsLoadingLeague(true);
     setLeagueError(null);
+
+    if (shouldScroll) {
+      setTimeout(() => {
+        leagueSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
 
     try {
       const url = `/api/fpl/league/${leagueId}?${forceRefresh ? "fresh=true" : ""}`;
@@ -79,6 +88,12 @@ export default function Home() {
       setLeagueDetails(data);
       if (data.current_gameweek) {
         setSelectedGw(data.current_gameweek);
+      }
+
+      if (shouldScroll) {
+        setTimeout(() => {
+          leagueSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 150);
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Error aggregating league data";
@@ -310,11 +325,14 @@ export default function Home() {
             <LeagueSelector
               leagues={managerProfile.leagues?.classic || []}
               selectedLeagueId={selectedLeagueId}
-              onSelectLeague={(id) => fetchLeague(id)}
+              onSelectLeague={(id) => fetchLeague(id, false, true)}
               isLoadingLeague={isLoadingLeague}
               gwSummaries={leaguesGwSummaries}
               isLoadingGwRanks={isLoadingGwRanks}
             />
+
+            {/* Target scroll anchor for League Data */}
+            <div ref={leagueSectionRef} className="scroll-mt-6" />
 
             {/* Error loading league */}
             {leagueError && (
