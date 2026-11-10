@@ -15,7 +15,7 @@ export const ManagerProfileCard: React.FC<ManagerProfileCardProps> = ({
   onReset,
 }) => {
   return (
-    <div className="w-full max-w-7xl mx-auto mb-8">
+    <div className="w-full">
       <div className="rounded-2xl bg-white p-5 sm:p-6 border border-gray-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         {/* Manager Header Info */}
         <div className="flex items-center gap-4">
