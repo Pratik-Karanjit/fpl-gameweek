@@ -16,7 +16,7 @@ import {
   AggregatedManagerEntry,
   LeagueGWSummary,
 } from "@/types/fpl";
-import { Trophy, AlertCircle, Info } from "lucide-react";
+import { Trophy, AlertCircle, Info, BarChart3, Users, ArrowLeft } from "lucide-react";
 
 export default function Home() {
   const [managerId, setManagerId] = useState<number | null>(null);
@@ -43,6 +43,9 @@ export default function Home() {
   // Modal inspection states
   const [modalManager, setModalManager] = useState<AggregatedManagerEntry | null>(null);
   const [winnerCardData, setWinnerCardData] = useState<WinnerCardData | null>(null);
+
+  // Mobile segmented view state ("leagues" table vs "standings")
+  const [mobileTab, setMobileTab] = useState<"leagues" | "standings">("standings");
 
   // Ref to scroll to league data section when Analyze is clicked
   const leagueSectionRef = useRef<HTMLDivElement | null>(null);
@@ -289,10 +292,10 @@ export default function Home() {
         isLoading={isLoadingProfile || isLoadingLeague || isLoadingGwRanks}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 w-full px-3 sm:px-6 lg:px-8 py-6">
         {/* If no manager is active yet, show landing hero */}
         {!managerProfile ? (
-          <div className="py-8 sm:py-16">
+          <div className="py-8 sm:py-16 max-w-4xl mx-auto">
             <div className="text-center max-w-2xl mx-auto mb-10">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F3E8F5] border border-[#D8C5DF] text-[#37003C] text-xs font-bold mb-4 shadow-sm">
                 <Trophy className="w-4 h-4 text-[#37003C]" />
@@ -314,109 +317,185 @@ export default function Home() {
             />
           </div>
         ) : (
-          <div>
+          <div className="space-y-6">
             {/* Manager Profile Header */}
             <ManagerProfileCard
               profile={managerProfile}
               onReset={handleResetManager}
             />
 
-            {/* League Selector Grid */}
-            <LeagueSelector
-              leagues={managerProfile.leagues?.classic || []}
-              selectedLeagueId={selectedLeagueId}
-              onSelectLeague={(id) => fetchLeague(id, false, true)}
-              isLoadingLeague={isLoadingLeague}
-              gwSummaries={leaguesGwSummaries}
-              isLoadingGwRanks={isLoadingGwRanks}
-            />
+            {/* Mobile View Switcher Segmented Control (< lg screens only) */}
+            <div className="lg:hidden flex items-center p-1 bg-gray-200/80 rounded-2xl border border-gray-300/60 shadow-inner">
+              <button
+                type="button"
+                onClick={() => setMobileTab("leagues")}
+                className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 ${
+                  mobileTab === "leagues"
+                    ? "bg-white text-[#37003C] shadow-sm"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                <Users className="w-4 h-4 text-[#37003C]" />
+                <span>
+                  Mini-Leagues ({managerProfile.leagues?.classic?.length || 0})
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setMobileTab("standings")}
+                className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 ${
+                  mobileTab === "standings"
+                    ? "bg-[#37003C] text-white shadow-sm"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                <BarChart3 className="w-4 h-4 text-[#00FF87]" />
+                <span className="truncate max-w-[150px]">
+                  {leagueDetails ? leagueDetails.league.name : "Standings"}
+                </span>
+              </button>
+            </div>
 
-            {/* Target scroll anchor for League Data */}
-            <div ref={leagueSectionRef} className="scroll-mt-6" />
+            {/* 30 - 70 Split Panel Workspace (100% Width on Desktop) */}
+            <div className="flex flex-col lg:flex-row items-start gap-6 w-full">
+              {/* LEFT PANEL: 30% width on Desktop */}
+              <div
+                className={`w-full lg:w-[32%] xl:w-[30%] shrink-0 transition-all duration-200 ${
+                  mobileTab === "leagues" ? "block" : "hidden lg:block"
+                }`}
+              >
+                <LeagueSelector
+                  leagues={managerProfile.leagues?.classic || []}
+                  selectedLeagueId={selectedLeagueId}
+                  onSelectLeague={(id) => {
+                    fetchLeague(id);
+                    setMobileTab("standings");
+                  }}
+                  isLoadingLeague={isLoadingLeague}
+                  gwSummaries={leaguesGwSummaries}
+                  isLoadingGwRanks={isLoadingGwRanks}
+                />
+              </div>
 
-            {/* Error loading league */}
-            {leagueError && (
-              <div className="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 text-sm flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-semibold text-rose-800">
-                    Failed to fetch league data
-                  </p>
-                  <p className="text-xs text-rose-700 mt-0.5">{leagueError}</p>
+              {/* RIGHT PANEL: 70% width on Desktop */}
+              <div
+                ref={leagueSectionRef}
+                className={`w-full lg:w-[68%] xl:w-[70%] min-w-0 flex-1 transition-all duration-200 ${
+                  mobileTab === "standings" ? "block" : "hidden lg:block"
+                }`}
+              >
+                {/* Mobile Back Button to return to leagues list */}
+                <div className="lg:hidden mb-3">
+                  <button
+                    type="button"
+                    onClick={() => setMobileTab("leagues")}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-gray-200 text-xs font-bold text-[#37003C] shadow-sm hover:bg-gray-50 transition"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5" />
+                    <span>Back to Mini-Leagues list</span>
+                  </button>
                 </div>
-              </div>
-            )}
 
-            {/* League Data Section */}
-            {isLoadingLeague ? (
-              <div className="py-20 text-center bg-white rounded-2xl border border-gray-200 shadow-sm">
-                <div className="w-10 h-10 border-4 border-[#37003C] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                <h4 className="text-lg font-bold text-gray-900">
-                  Aggregating Mini-League Data...
-                </h4>
-                <p className="text-xs text-gray-500 mt-1 max-w-sm mx-auto">
-                  Fetching granular gameweek histories, chip usage, and squad valuations for all league entries.
-                </p>
-              </div>
-            ) : leagueDetails ? (
-              <div>
-                {/* Active League Title Banner */}
-                <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-gray-200 pb-4">
-                  <div>
-                    <span className="text-xs font-bold text-[#37003C] tracking-wider uppercase">
-                      Active League Standings
-                    </span>
-                    <h2 className="text-2xl sm:text-3xl font-black text-gray-900">
-                      {leagueDetails.league.name}
-                    </h2>
+                {/* Error loading league */}
+                {leagueError && (
+                  <div className="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 text-sm flex items-start gap-3 animate-in fade-in duration-200">
+                    <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-semibold text-rose-800">
+                        Failed to fetch league data
+                      </p>
+                      <p className="text-xs text-rose-700 mt-0.5">{leagueError}</p>
+                    </div>
                   </div>
+                )}
 
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-700 bg-white px-3.5 py-1.5 rounded-xl border border-gray-200 font-semibold shadow-sm">
-                      Season Gameweek {leagueDetails.current_gameweek} of {leagueDetails.total_gameweeks}
-                    </span>
+                {/* Right Panel Main Content */}
+                {isLoadingLeague ? (
+                  <div className="py-24 text-center bg-white rounded-2xl border border-gray-200 shadow-sm animate-in fade-in duration-200">
+                    <div className="w-10 h-10 border-4 border-[#37003C] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                    <h4 className="text-lg font-bold text-gray-900">
+                      Aggregating Mini-League Data...
+                    </h4>
+                    <p className="text-xs text-gray-500 mt-1 max-w-sm mx-auto">
+                      Fetching granular gameweek histories, chip usage, and squad valuations for all league entries.
+                    </p>
                   </div>
-                </div>
+                ) : leagueDetails ? (
+                  <div className="space-y-6 animate-in fade-in duration-200">
+                    {/* Active League Title Banner */}
+                    <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[11px] font-bold text-[#37003C] tracking-wider uppercase bg-[#F3E8F5] px-2.5 py-0.5 rounded-full border border-[#D8C5DF]">
+                            Active League Standings
+                          </span>
+                          <span className="text-xs text-gray-400 font-mono">
+                            ID #{leagueDetails.league.id}
+                          </span>
+                        </div>
+                        <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mt-1">
+                          {leagueDetails.league.name}
+                        </h2>
+                      </div>
 
-                {/* Summary Metric Cards (Includes GW Winner Poster Trigger) */}
-                <LeagueSummaryCards
-                  entries={processedEntries}
-                  selectedGw={selectedGw}
-                  leagueName={leagueDetails.league.name}
-                  onOpenWinnerModal={setWinnerCardData}
-                />
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-700 bg-gray-50 px-3.5 py-1.5 rounded-xl border border-gray-200 font-semibold shadow-sm">
+                          Season Gameweek {leagueDetails.current_gameweek} of {leagueDetails.total_gameweeks}
+                        </span>
+                      </div>
+                    </div>
 
-                {/* Table Controls (Search, GW select, Chips filter, Sort) */}
-                <TableControls
-                  searchQuery={searchQuery}
-                  onSearchChange={setSearchQuery}
-                  selectedGw={selectedGw}
-                  onSelectGw={setSelectedGw}
-                  availableGws={availableGws}
-                  activeChipFilter={activeChipFilter}
-                  onChipFilterChange={setActiveChipFilter}
-                  sortField={sortField}
-                  sortDirection={sortDirection}
-                  onSortChange={handleSortChange}
-                  onResetFilters={handleResetFilters}
-                  totalFilteredCount={processedEntries.length}
-                  totalOriginalCount={leagueDetails.aggregated_entries.length}
-                />
+                    {/* Summary Metric Cards (Includes GW Winner Poster Trigger) */}
+                    <LeagueSummaryCards
+                      entries={processedEntries}
+                      selectedGw={selectedGw}
+                      leagueName={leagueDetails.league.name}
+                      onOpenWinnerModal={setWinnerCardData}
+                    />
 
-                {/* Dynamic Ranking Table (1..N real-time re-ranking & Winner Card trigger) */}
-                <DynamicRankingTable
-                  entries={processedEntries}
-                  selectedGw={selectedGw}
-                  sortField={sortField}
-                  sortDirection={sortDirection}
-                  onSortChange={handleSortChange}
-                  onSelectManager={setModalManager}
-                  currentManagerId={managerProfile.id}
-                  leagueName={leagueDetails.league.name}
-                  onOpenWinnerModal={setWinnerCardData}
-                />
+                    {/* Table Controls (Search, GW select, Chips filter, Sort) */}
+                    <TableControls
+                      searchQuery={searchQuery}
+                      onSearchChange={setSearchQuery}
+                      selectedGw={selectedGw}
+                      onSelectGw={setSelectedGw}
+                      availableGws={availableGws}
+                      activeChipFilter={activeChipFilter}
+                      onChipFilterChange={setActiveChipFilter}
+                      sortField={sortField}
+                      sortDirection={sortDirection}
+                      onSortChange={handleSortChange}
+                      onResetFilters={handleResetFilters}
+                      totalFilteredCount={processedEntries.length}
+                      totalOriginalCount={leagueDetails.aggregated_entries.length}
+                    />
+
+                    {/* Dynamic Ranking Table (1..N real-time re-ranking & Winner Card trigger) */}
+                    <DynamicRankingTable
+                      entries={processedEntries}
+                      selectedGw={selectedGw}
+                      sortField={sortField}
+                      sortDirection={sortDirection}
+                      onSortChange={handleSortChange}
+                      onSelectManager={setModalManager}
+                      currentManagerId={managerProfile.id}
+                      leagueName={leagueDetails.league.name}
+                      onOpenWinnerModal={setWinnerCardData}
+                    />
+                  </div>
+                ) : (
+                  <div className="py-24 text-center bg-white rounded-2xl border border-gray-200 shadow-sm p-6 animate-in fade-in duration-200">
+                    <Users className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+                    <h4 className="text-base font-bold text-gray-800">
+                      Select a Mini-League
+                    </h4>
+                    <p className="text-xs text-gray-500 mt-1 max-w-sm mx-auto">
+                      Choose any mini-league from the left panel to load live Gameweek standings and ranking analysis.
+                    </p>
+                  </div>
+                )}
               </div>
-            ) : null}
+            </div>
           </div>
         )}
       </main>
@@ -434,8 +513,8 @@ export default function Home() {
       />
 
       {/* Footer */}
-      <footer className="mt-16 border-t border-gray-200 bg-white py-8 text-center text-xs text-gray-500">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <footer className="mt-16 border-t border-gray-200 bg-white py-8 text-center text-xs text-gray-500 w-full">
+        <div className="w-full px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p>© {new Date().getFullYear()} FPL League Pulse. Built with Next.js & Tailwind CSS.</p>
           <p className="flex items-center gap-1 text-gray-500">
             <Info className="w-3.5 h-3.5 text-[#37003C]" />

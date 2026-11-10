@@ -1,15 +1,23 @@
 "use client";
 
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { FPLClassicLeagueItem, LeagueGWSummary } from "@/types/fpl";
 import {
   Users,
-  ChevronRight,
-  CheckCircle,
-  Zap,
+  Search,
+  X,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
   Trophy,
+  Zap,
   Crown,
+  ChevronRight,
+  CheckCircle2,
 } from "lucide-react";
+
+type LeftTableSortField = "name" | "gw_rank" | "overall_rank" | "managers";
+type SortDirection = "asc" | "desc";
 
 interface LeagueSelectorProps {
   leagues: FPLClassicLeagueItem[];
@@ -28,9 +36,96 @@ export const LeagueSelector: React.FC<LeagueSelectorProps> = ({
   gwSummaries = {},
   isLoadingGwRanks = false,
 }) => {
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  // Default sorted alphabetically by League Name as requested
+  const [sortField, setSortField] = useState<LeftTableSortField>("name");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+
+  const handleHeaderSort = (field: LeftTableSortField) => {
+    if (sortField === field) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      // For ranks and names, default to asc (1st rank first, A-Z first); for managers, default to desc
+      setSortDirection(field === "managers" ? "desc" : "asc");
+    }
+  };
+
+  // Filter and sort leagues
+  const processedLeagues = useMemo(() => {
+    if (!leagues || leagues.length === 0) return [];
+
+    // 1. Filter by search query (name or ID)
+    let filtered = leagues;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      filtered = filtered.filter(
+        (league) =>
+          league.name.toLowerCase().includes(q) ||
+          String(league.id).includes(q)
+      );
+    }
+
+    // 2. Sort dynamically
+    return [...filtered].sort((a, b) => {
+      let valA: string | number = 0;
+      let valB: string | number = 0;
+
+      const summaryA = gwSummaries[a.id];
+      const summaryB = gwSummaries[b.id];
+
+      switch (sortField) {
+        case "name":
+          valA = a.name.toLowerCase();
+          valB = b.name.toLowerCase();
+          if (valA < valB) return sortDirection === "asc" ? -1 : 1;
+          if (valA > valB) return sortDirection === "asc" ? 1 : -1;
+          return 0;
+
+        case "gw_rank":
+          valA = summaryA?.manager_gw_rank ?? 9999999;
+          valB = summaryB?.manager_gw_rank ?? 9999999;
+          break;
+
+        case "overall_rank":
+          valA = a.entry_rank ?? summaryA?.manager_overall_rank ?? a.rank ?? 9999999;
+          valB = b.entry_rank ?? summaryB?.manager_overall_rank ?? b.rank ?? 9999999;
+          break;
+
+        case "managers":
+          valA = a.rank_count || summaryA?.total_managers || 0;
+          valB = b.rank_count || summaryB?.total_managers || 0;
+          break;
+
+        default:
+          valA = a.name.toLowerCase();
+          valB = b.name.toLowerCase();
+          if (valA < valB) return sortDirection === "asc" ? -1 : 1;
+          if (valA > valB) return sortDirection === "asc" ? 1 : -1;
+          return 0;
+      }
+
+      const diff = (valA as number) - (valB as number);
+      return sortDirection === "asc" ? diff : -diff;
+    });
+  }, [leagues, searchQuery, sortField, sortDirection, gwSummaries]);
+
+  const renderSortIcon = (field: LeftTableSortField) => {
+    if (sortField !== field) {
+      return (
+        <ArrowUpDown className="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-600 transition-colors shrink-0" />
+      );
+    }
+    return sortDirection === "asc" ? (
+      <ArrowUp className="w-3.5 h-3.5 text-[#37003C] font-bold shrink-0 animate-in fade-in duration-150" />
+    ) : (
+      <ArrowDown className="w-3.5 h-3.5 text-[#37003C] font-bold shrink-0 animate-in fade-in duration-150" />
+    );
+  };
+
   if (!leagues || leagues.length === 0) {
     return (
-      <div className="w-full max-w-7xl mx-auto mb-8 p-8 rounded-2xl bg-white text-center border border-gray-200 shadow-sm">
+      <div className="w-full p-6 rounded-2xl bg-white text-center border border-gray-200 shadow-sm">
         <p className="text-gray-500 text-sm">
           No classic mini-leagues found for this manager ID.
         </p>
@@ -39,167 +134,272 @@ export const LeagueSelector: React.FC<LeagueSelectorProps> = ({
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto mb-8">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h3 className="text-lg font-bold text-[#37003C] flex items-center gap-2">
-            <Users className="w-5 h-5 text-[#37003C]" />
-            <span>Your Joined Mini-Leagues</span>
-          </h3>
-          <p className="text-xs text-gray-500">
-            Compare live Gameweek leaderboard ranks across leagues, or click any card for full historical analytics.
-          </p>
+    <div className="w-full bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col">
+      {/* 1. Header with Title & Badge */}
+      <div className="p-4 sm:p-4.5 border-b border-gray-100 bg-gradient-to-r from-white to-[#FDFBFE]">
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-xl bg-[#F3E8F5] text-[#37003C] flex items-center justify-center font-bold">
+              <Users className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="text-sm font-black text-[#37003C] tracking-tight leading-none">
+                Mini-Leagues
+              </h3>
+              <p className="text-[11px] text-gray-500 mt-0.5">
+                Click any row to view full standings
+              </p>
+            </div>
+          </div>
+
+          <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#F3E8F5] text-[#37003C] border border-[#D8C5DF]">
+            {leagues.length} Total
+          </span>
         </div>
-        <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#F3E8F5] border border-[#D8C5DF] text-[#37003C]">
-          {leagues.length} {leagues.length === 1 ? "League" : "Leagues"}
-        </span>
+
+        {/* 2. Search Bar (Search by League Name or Code) */}
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+            <Search className="w-3.5 h-3.5" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search league name or code (e.g. 170)..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-9 pr-8 py-2 bg-gray-50 hover:bg-gray-100/70 focus:bg-white border border-gray-200 rounded-xl text-xs font-medium text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#37003C] focus:border-transparent transition"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {leagues.map((league) => {
-          const isSelected = selectedLeagueId === league.id;
-          const summary = gwSummaries[league.id];
-          const hasSummary = Boolean(summary);
-
-          const overallRank = league.entry_rank ?? summary?.manager_overall_rank ?? league.rank;
-          const totalManagersCount = league.rank_count || summary?.total_managers;
-
-          return (
-            <button
-              key={league.id}
-              onClick={() => onSelectLeague(league.id)}
-              disabled={isLoadingLeague && isSelected}
-              className={`group text-left p-5 rounded-2xl transition-all duration-200 relative overflow-hidden flex flex-col justify-between ${
-                isSelected
-                  ? "bg-white border-2 border-[#37003C] shadow-lg shadow-purple-950/10 ring-2 ring-[#37003C]/20"
-                  : "bg-white border border-gray-200 hover:border-[#37003C] hover:shadow-md shadow-sm"
-              }`}
-            >
-              {/* Active Badge */}
-              {isSelected && (
-                <div className="absolute top-3 right-3 flex items-center gap-1 text-[11px] font-bold text-white bg-[#37003C] px-2.5 py-0.5 rounded-full shadow-sm">
-                  <CheckCircle className="w-3.5 h-3.5 text-[#00FF87]" />
-                  <span>Viewing</span>
-                </div>
-              )}
-
-              {/* League Header */}
-              <div className="pr-16 mb-4">
-                <h4 className="text-base font-bold text-gray-900 group-hover:text-[#37003C] transition-colors line-clamp-1">
-                  {league.name}
-                </h4>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="text-xs text-gray-400 font-mono">
-                    ID #{league.id}
+      {/* 3. Sortable Mini-League Table */}
+      <div className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-270px)] sm:max-h-[calc(100vh-250px)] divide-y divide-gray-100 overscroll-contain">
+        <table className="w-full text-left border-collapse text-xs">
+          {/* Sticky Header */}
+          <thead className="sticky top-0 z-10 bg-gray-50/95 backdrop-blur-sm border-b border-gray-200 text-gray-600 font-bold select-none text-[11px]">
+            <tr>
+              {/* League Name Header (Default Alphabetical) */}
+              <th
+                onClick={() => handleHeaderSort("name")}
+                className="py-2.5 px-3 cursor-pointer group hover:bg-gray-100/80 transition-colors"
+                title="Sort Alphabetically"
+              >
+                <div className="flex items-center gap-1.5">
+                  <span className={sortField === "name" ? "text-[#37003C] font-black" : ""}>
+                    League
                   </span>
-                  {totalManagersCount && (
-                    <>
-                      <span className="text-gray-300">•</span>
-                      <span className="text-xs text-gray-600 font-medium">
-                        {new Intl.NumberFormat().format(totalManagersCount)} Managers
-                      </span>
-                    </>
-                  )}
+                  {renderSortIcon("name")}
                 </div>
-              </div>
+              </th>
 
-              {/* Two Stat Tiles: GW Leaderboard Rank & Overall Rank */}
-              <div className="grid grid-cols-2 gap-2.5 mb-4">
-                {/* 1. GAMEWEEK LEADERBOARD RANK */}
-                <div className="p-3 rounded-xl bg-[#F8F4FA] border border-[#E2D5E6] relative overflow-hidden">
-                  <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-[#37003C] mb-1">
-                    <span className="flex items-center gap-1">
-                      <Zap className="w-3 h-3 text-[#00BDD6]" />
-                      GW {summary?.gw ? `${summary.gw}` : ""} Rank
-                    </span>
-                    {summary?.manager_gw_rank === 1 && (
-                      <Crown className="w-3.5 h-3.5 text-amber-500" />
-                    )}
-                  </div>
+              {/* GW Rank Header */}
+              <th
+                onClick={() => handleHeaderSort("gw_rank")}
+                className="py-2.5 px-2.5 text-center cursor-pointer group hover:bg-gray-100/80 transition-colors whitespace-nowrap"
+                title="Sort by Gameweek Rank"
+              >
+                <div className="flex items-center justify-center gap-1">
+                  <span className={sortField === "gw_rank" ? "text-[#37003C] font-black" : ""}>
+                    GW Rank
+                  </span>
+                  {renderSortIcon("gw_rank")}
+                </div>
+              </th>
 
-                  {isLoadingGwRanks && !hasSummary ? (
-                    <div className="py-2">
-                      <div className="h-5 w-16 bg-gray-200 rounded animate-pulse mb-1.5" />
-                      <div className="h-3 w-20 bg-gray-100 rounded animate-pulse" />
-                    </div>
-                  ) : hasSummary ? (
-                    <div>
-                      <div className="flex items-baseline gap-1.5">
-                        <span className="text-xl font-black text-[#37003C]">
-                          #{summary.manager_gw_rank}
-                          {summary.is_approximate ? "+" : ""}
-                        </span>
-                        {totalManagersCount && (
-                          <span className="text-[11px] text-gray-500 truncate max-w-[80px]">
-                            of {new Intl.NumberFormat().format(totalManagersCount)}
-                          </span>
+              {/* Overall Rank Header */}
+              <th
+                onClick={() => handleHeaderSort("overall_rank")}
+                className="py-2.5 px-2.5 text-center cursor-pointer group hover:bg-gray-100/80 transition-colors whitespace-nowrap"
+                title="Sort by Overall Rank"
+              >
+                <div className="flex items-center justify-center gap-1">
+                  <span className={sortField === "overall_rank" ? "text-[#37003C] font-black" : ""}>
+                    Overall
+                  </span>
+                  {renderSortIcon("overall_rank")}
+                </div>
+              </th>
+
+              {/* Action column (arrow icon) */}
+              <th className="py-2.5 pr-3 pl-1 w-6" />
+            </tr>
+          </thead>
+
+          {/* Table Body */}
+          <tbody className="divide-y divide-gray-100/80 bg-white">
+            {processedLeagues.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="py-12 text-center text-gray-400">
+                  <Users className="w-6 h-6 mx-auto mb-2 text-gray-300" />
+                  <p className="font-semibold text-xs text-gray-600">No leagues found</p>
+                  <p className="text-[11px] text-gray-400 mt-0.5">
+                    No results match &ldquo;{searchQuery}&rdquo;
+                  </p>
+                </td>
+              </tr>
+            ) : (
+              processedLeagues.map((league) => {
+                const isSelected = selectedLeagueId === league.id;
+                const summary = gwSummaries[league.id];
+                const hasSummary = Boolean(summary);
+
+                const overallRank =
+                  league.entry_rank ?? summary?.manager_overall_rank ?? league.rank;
+                const totalManagersCount =
+                  league.rank_count || summary?.total_managers;
+
+                return (
+                  <tr
+                    key={league.id}
+                    onClick={() => onSelectLeague(league.id)}
+                    className={`cursor-pointer transition-all duration-150 group relative ${
+                      isSelected
+                        ? "bg-[#37003C] text-white hover:bg-[#45004B]"
+                        : "hover:bg-purple-50/60 text-gray-900"
+                    }`}
+                  >
+                    {/* Column 1: League Name & ID / Managers */}
+                    <td className="py-3 px-3">
+                      <div className="flex items-center gap-2">
+                        {/* Active Indicator dot */}
+                        {isSelected && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#00FF87] animate-pulse shrink-0" />
                         )}
-                      </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5">
+                            <span
+                              className={`font-bold text-xs truncate max-w-[150px] sm:max-w-[180px] xl:max-w-[190px] block ${
+                                isSelected
+                                  ? "text-white"
+                                  : "text-gray-900 group-hover:text-[#37003C]"
+                              }`}
+                              title={league.name}
+                            >
+                              {league.name}
+                            </span>
+                          </div>
 
-                      <div className="flex items-center justify-between text-[11px] mt-1">
-                        <span className="font-bold text-[#00A859]">
-                          {summary.manager_gw_points} pts
+                          <div className="flex items-center gap-1.5 mt-0.5 text-[10px]">
+                            <span
+                              className={`font-mono ${
+                                isSelected ? "text-purple-200" : "text-gray-400"
+                              }`}
+                            >
+                              #{league.id}
+                            </span>
+                            {totalManagersCount && (
+                              <>
+                                <span className={isSelected ? "text-purple-400" : "text-gray-300"}>
+                                  •
+                                </span>
+                                <span
+                                  className={
+                                    isSelected ? "text-purple-200 font-medium" : "text-gray-500"
+                                  }
+                                >
+                                  {new Intl.NumberFormat().format(totalManagersCount)} mgrs
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* Column 2: GW Rank & Points */}
+                    <td className="py-3 px-2.5 text-center whitespace-nowrap">
+                      {hasSummary ? (
+                        <div className="flex flex-col items-center">
+                          <span
+                            className={`font-black text-xs flex items-center gap-0.5 ${
+                              isSelected
+                                ? "text-[#00FF87]"
+                                : summary.manager_gw_rank === 1
+                                ? "text-amber-600 font-black"
+                                : "text-[#37003C]"
+                            }`}
+                          >
+                            {summary.manager_gw_rank === 1 && (
+                              <Crown className="w-3 h-3 text-amber-400 shrink-0 inline" />
+                            )}
+                            #{summary.manager_gw_rank}
+                            {summary.is_approximate ? "+" : ""}
+                          </span>
+                          <span
+                            className={`text-[10px] font-bold mt-0.5 ${
+                              isSelected ? "text-purple-200" : "text-[#00A859]"
+                            }`}
+                          >
+                            {summary.manager_gw_points} pts
+                          </span>
+                        </div>
+                      ) : isLoadingGwRanks ? (
+                        <div className="h-4 w-10 bg-gray-200 rounded animate-pulse mx-auto" />
+                      ) : (
+                        <span className={`text-[11px] ${isSelected ? "text-purple-300" : "text-gray-400"}`}>
+                          -
                         </span>
-                        {summary.manager_gw_rank === 1 && !summary.is_approximate ? (
-                          <span className="text-[10px] font-bold text-amber-800 bg-amber-100 px-1.5 py-0.2 rounded border border-amber-300">
-                            👑 Top Score!
-                          </span>
-                        ) : (
-                          <span className="text-[10px] text-gray-500">
-                            High: {summary.league_gw_high}
-                          </span>
-                        )}
+                      )}
+                    </td>
+
+                    {/* Column 3: Overall Rank */}
+                    <td className="py-3 px-2.5 text-center whitespace-nowrap">
+                      <div className="flex flex-col items-center">
+                        <span
+                          className={`font-bold text-xs ${
+                            isSelected ? "text-white" : "text-gray-800"
+                          }`}
+                        >
+                          {overallRank
+                            ? `#${new Intl.NumberFormat().format(overallRank)}`
+                            : "-"}
+                        </span>
+                        <span
+                          className={`text-[10px] mt-0.5 ${
+                            isSelected ? "text-purple-300" : "text-gray-400"
+                          }`}
+                        >
+                          {summary?.manager_total_points
+                            ? `${summary.manager_total_points} pts`
+                            : league.total
+                            ? `${league.total} pts`
+                            : "Total"}
+                        </span>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="py-2 text-[11px] text-gray-400">
-                      <span>Click to load</span>
-                    </div>
-                  )}
-                </div>
+                    </td>
 
-                {/* 2. OVERALL SEASON RANK */}
-                <div className="p-3 rounded-xl bg-[#F8F4FA] border border-[#E2D5E6]">
-                  <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">
-                    <span className="flex items-center gap-1">
-                      <Trophy className="w-3 h-3 text-amber-500" />
-                      Overall Rank
-                    </span>
-                  </div>
+                    {/* Column 4: Selection Arrow */}
+                    <td className="py-3 pr-2.5 pl-0 text-right">
+                      {isSelected ? (
+                        <CheckCircle2 className="w-4 h-4 text-[#00FF87] shrink-0" />
+                      ) : (
+                        <ChevronRight className="w-3.5 h-3.5 text-gray-300 group-hover:text-[#37003C] group-hover:translate-x-0.5 transition-all shrink-0" />
+                      )}
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
 
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-xl font-black text-gray-900">
-                      {overallRank ? `#${new Intl.NumberFormat().format(overallRank)}` : "-"}
-                    </span>
-                  </div>
-
-                  <div className="text-[11px] text-gray-500 mt-1 font-medium truncate">
-                    {summary?.manager_total_points
-                      ? `${summary.manager_total_points} pts total`
-                      : league.total
-                      ? `${league.total} pts total`
-                      : totalManagersCount
-                      ? `of ${new Intl.NumberFormat().format(totalManagersCount)}`
-                      : "Cumulative"}
-                  </div>
-                </div>
-              </div>
-
-              {/* Card Footer Link */}
-              <div className="pt-2 border-t border-gray-100 flex items-center justify-between text-xs">
-                <span className="text-gray-500 text-[11px]">
-                  {hasSummary && summary.league_gw_avg
-                    ? `League Avg: ${summary.league_gw_avg} pts`
-                    : "Deep Standings & Chips"}
-                </span>
-                <span className="font-bold text-[#37003C] group-hover:text-[#5F3290] group-hover:translate-x-1 transition-all flex items-center gap-0.5">
-                  <span>Analyze</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </span>
-              </div>
-            </button>
-          );
-        })}
+      {/* 4. Table Footer */}
+      <div className="px-3.5 py-2.5 bg-gray-50 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-500 font-medium">
+        <span>
+          Showing {processedLeagues.length} of {leagues.length} leagues
+        </span>
+        <span className="text-[10px] text-gray-400 font-mono">
+          Sorted: {sortField.toUpperCase()} ({sortDirection.toUpperCase()})
+        </span>
       </div>
     </div>
   );
