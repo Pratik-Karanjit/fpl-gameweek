@@ -1,4 +1,4 @@
-# FPL Mini-League Pulse & Dynamic Ranking Engine
+# FPL Gameweek
 
 A full-stack sports analytics web application built with **Next.js 14 (App Router)**, **TypeScript**, and **Tailwind CSS**. It connects to the public Fantasy Premier League (FPL) API to pull, aggregate, filter, and dynamically re-rank managers within mini-leagues.
 

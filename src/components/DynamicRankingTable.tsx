@@ -11,12 +11,14 @@ import {
   ChevronRight,
   Sparkles,
   Camera,
+  ExternalLink,
 } from "lucide-react";
 import { WinnerCardData } from "./WinnerCardModal";
 
 interface DynamicRankingTableProps {
   entries: AggregatedManagerEntry[];
   selectedGw: number;
+  latestGw?: number;
   sortField: SortField;
   sortDirection: "asc" | "desc";
   onSortChange: (field: SortField) => void;
@@ -29,6 +31,7 @@ interface DynamicRankingTableProps {
 export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
   entries,
   selectedGw,
+  latestGw,
   sortField,
   sortDirection,
   onSortChange,
@@ -168,9 +171,28 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
                     <div className="flex items-center gap-2.5">
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-gray-900 group-hover:text-[#37003C] transition-colors">
-                            {manager.team_name}
-                          </span>
+                          {(() => {
+                            const targetGw =
+                              latestGw ||
+                              (manager.history && manager.history.length > 0
+                                ? manager.history[manager.history.length - 1].event
+                                : selectedGw);
+                            const fplTeamUrl = `https://fantasy.premierleague.com/en/entry/${manager.entry_id}/event/${targetGw}`;
+
+                            return (
+                              <a
+                                href={fplTeamUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                title={`View team on official FPL site (GW ${targetGw})`}
+                                className="font-bold text-gray-900 hover:text-[#37003C] hover:underline underline-offset-2 transition-all inline-flex items-center gap-1 group/link"
+                              >
+                                <span>{manager.team_name}</span>
+                                <ExternalLink className="w-3 h-3 opacity-0 -translate-y-0.5 group-hover/link:opacity-60 transition-opacity" />
+                              </a>
+                            );
+                          })()}
                           {isCurrentUser && (
                             <span className="text-[10px] uppercase font-bold bg-[#37003C] text-white px-2 py-0.5 rounded-md">
                               You
@@ -178,7 +200,27 @@ export const DynamicRankingTable: React.FC<DynamicRankingTableProps> = ({
                           )}
                         </div>
                         <div className="text-xs text-gray-500 mt-0.5 flex items-center gap-2">
-                          <span>{manager.player_name}</span>
+                          {(() => {
+                            const targetGw =
+                              latestGw ||
+                              (manager.history && manager.history.length > 0
+                                ? manager.history[manager.history.length - 1].event
+                                : selectedGw);
+                            const fplTeamUrl = `https://fantasy.premierleague.com/en/entry/${manager.entry_id}/event/${targetGw}`;
+
+                            return (
+                              <a
+                                href={fplTeamUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                title={`View ${manager.player_name}'s team on official FPL site (GW ${targetGw})`}
+                                className="hover:text-[#37003C] hover:underline underline-offset-2 transition-colors"
+                              >
+                                {manager.player_name}
+                              </a>
+                            );
+                          })()}
                           <span className="text-gray-300">•</span>
                           <span className="font-mono text-gray-400">
                             #{manager.entry_id}

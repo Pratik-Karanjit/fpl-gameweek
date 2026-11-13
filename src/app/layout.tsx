@@ -2,9 +2,17 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "FPL Mini-League Hub | Dynamic Analytics & Rankings",
+  title: "FPL Gameweek",
   description:
-    "Connect to the Fantasy Premier League API to pull, aggregate, filter, and dynamically rank managers across mini-leagues.",
+    "Dynamic Fantasy Premier League mini-league analytics and live gameweek rankings.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+  },
 };
 
 export default function RootLayout({

@@ -29,15 +29,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="hidden sm:block border-l border-gray-200 pl-3">
               <div className="flex items-center gap-2">
                 <span className="text-base font-black tracking-wider text-[#37003C]">
-                  LEAGUE PULSE
-                </span>
-                <span className="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-[#E0F9FF] text-[#0096AD] border border-[#B3F2FD]">
-                  LIVE
+                  FPL Gameweek
                 </span>
               </div>
-              <p className="text-[11px] text-gray-500 font-medium leading-none mt-0.5">
-                Dynamic Mini-League Analytics & Ranking Engine
-              </p>
             </div>
           </div>
         </div>

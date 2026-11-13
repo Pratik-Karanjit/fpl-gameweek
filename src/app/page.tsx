@@ -474,6 +474,7 @@ export default function Home() {
                     <DynamicRankingTable
                       entries={processedEntries}
                       selectedGw={selectedGw}
+                      latestGw={leagueDetails.current_gameweek}
                       sortField={sortField}
                       sortDirection={sortDirection}
                       onSortChange={handleSortChange}
@@ -515,7 +516,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="mt-16 border-t border-gray-200 bg-white py-8 text-center text-xs text-gray-500 w-full">
         <div className="w-full px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© {new Date().getFullYear()} FPL League Pulse. Built with Next.js & Tailwind CSS.</p>
+          <p>© {new Date().getFullYear()} FPL Gameweek. Built with Next.js & Tailwind CSS.</p>
           <p className="flex items-center gap-1 text-gray-500">
             <Info className="w-3.5 h-3.5 text-[#37003C]" />
             <span>Connects directly to the public Fantasy Premier League API.</span>
