@@ -3,7 +3,7 @@
 import React from "react";
 import { FPLManagerProfile } from "@/types/fpl";
 import { formatRank } from "@/lib/utils";
-import { User, Globe, Trophy, Award, Zap, LogOut } from "lucide-react";
+import { User, Globe, Trophy, Award, Zap, TrendingUp, LogOut } from "lucide-react";
 
 interface ManagerProfileCardProps {
   profile: FPLManagerProfile;
@@ -65,6 +65,17 @@ export const ManagerProfileCard: React.FC<ManagerProfileCardProps> = ({
             </div>
             <div className="text-xl font-black text-gray-900 mt-0.5">
               #{formatRank(profile.summary_overall_rank)}
+            </div>
+          </div>
+
+          {/* Current GW Rank */}
+          <div className="flex-1 sm:flex-initial min-w-[125px] px-4 py-2.5 rounded-xl bg-[#F8F4FA] border border-[#E2D5E6]">
+            <div className="flex items-center gap-1.5 text-[11px] text-gray-500 font-bold uppercase tracking-wider">
+              <TrendingUp className="w-3.5 h-3.5 text-[#37003C]" />
+              <span>Current GW Rank</span>
+            </div>
+            <div className="text-xl font-black text-gray-900 mt-0.5">
+              {profile.summary_event_rank ? `#${formatRank(profile.summary_event_rank)}` : "-"}
             </div>
           </div>
 
